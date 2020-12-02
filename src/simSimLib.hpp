@@ -8,6 +8,7 @@
 #ifndef simSimLib_h
 #define simSimLib_h
 
+#include "facilityClass.hpp"
 #include "storeClass.hpp"
 #include "resourcePromiseClass.hpp"
 #include "simSimulatorClass.hpp"
