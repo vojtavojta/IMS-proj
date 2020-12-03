@@ -16,3 +16,7 @@ unsigned long long Identifieble::nextIdentifier() {
 Identifieble::Identifieble(){
     id = Identifieble::nextIdentifier();
 }
+
+unsigned long long Identifieble::getId(){
+    return this->id;
+}

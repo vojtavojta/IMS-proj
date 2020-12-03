@@ -11,6 +11,7 @@
 double _g_curentTime = 0;
 const double & current_time = _g_curentTime;
 
+
 Simulator::Simulator(double sTime, double eTime){
     this->start_time = sTime;
     this->end_time = eTime;

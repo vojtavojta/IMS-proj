@@ -10,7 +10,6 @@
 
 #include "eventClass.hpp"
 #include "identifiable.hpp"
-//#include "resourceHandler.hpp"
 
 class ResourceHandler;
 class Facility;

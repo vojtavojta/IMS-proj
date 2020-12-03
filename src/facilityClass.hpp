@@ -12,12 +12,13 @@
 #include <string>
 #include <queue>
 #include <algorithm>
-//#include "resourcePromiseClass.hpp"
+#include "simulationStatistics.hpp"
+
 
 class ResourcePromise;
 
 
-class Facility: public std::enable_shared_from_this<Facility> {
+class Facility: public std::enable_shared_from_this<Facility>, public Identifieble {
 private:
     
     bool seized = false;
@@ -27,11 +28,11 @@ public:
     std::string name;
     
     Facility(std::string name);
-    
+    unsigned long queue_len();
     void remove_promise(ResourcePromise *);
     void get_back(unsigned long number);
     std::shared_ptr<ResourcePromise> seize_or_reserve();
-    
+    virtual bool busy();
     void setName(std::string new_name);
 //    friend void ResourcePromise::on_fail(double wait_until, std::shared_ptr<Event> timed_out_event);
 //    friend void ResourcePromise::release();

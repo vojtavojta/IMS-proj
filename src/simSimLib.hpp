@@ -8,10 +8,12 @@
 #ifndef simSimLib_h
 #define simSimLib_h
 
-//#include "storeClass.hpp"
+#include "simulationStatistics.hpp"
 #include "simSimulatorClass.hpp"
 #include "facilityClass.hpp"
 #include "resourcePromiseClass.hpp"
 #include "numberGenerator.hpp"
+
+
 
 #endif /* simSimLib_h */

@@ -10,8 +10,20 @@
 
 Facility::Facility(std::string name){
     this->name = name;
+    this->seized = false;
 }
 
+bool Facility::busy(){
+    if (this->promises.empty()) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+unsigned long Facility::queue_len(){
+    return this->promises.size();
+}
 
 std::shared_ptr<ResourcePromise> Facility::seize_or_reserve(){
     auto ptr_this = shared_from_this();
@@ -19,6 +31,7 @@ std::shared_ptr<ResourcePromise> Facility::seize_or_reserve(){
     if (!seized && this->promises.empty()) {
         promise->satisfied = true;
         seized = true;
+        simulation_info->add_seized(this->getId(), true);
         promise->resource_handler->receive_resources(1);
     } else {
         this->promises.push(promise);
@@ -29,9 +42,11 @@ std::shared_ptr<ResourcePromise> Facility::seize_or_reserve(){
 void Facility::get_back(unsigned long number){
     assert(number == 1);
     this->seized = false;
+    simulation_info->add_released(this->getId(), true);
     if(!this->promises.empty()){
         auto new_prom = this->promises.front();
         this->seized = true;
+        simulation_info->add_seized(this->getId(), true);
         new_prom->resource_handler->receive_resources(1);
         this->promises.pop();
         new_prom->satisfy();
@@ -67,6 +82,7 @@ std::shared_ptr<ResourcePromise> Resources::seize_or_reserve(unsigned long sourc
     std::shared_ptr<ResourcePromise> promise(new ResourcePromise(source_number, ptr_this));
     if (this->current_sources >= source_number && this->promises.empty()) {
         promise->satisfied = true;
+        simulation_info->add_seized(this->getId(), false, source_number);
         this->current_sources -= source_number;
         promise->resource_handler->receive_resources(source_number);
     } else {
@@ -77,10 +93,12 @@ std::shared_ptr<ResourcePromise> Resources::seize_or_reserve(unsigned long sourc
 
 void Resources::get_back(unsigned long number){
     this->current_sources += number;
+    simulation_info->add_released(this->getId(), false, number);
     if(!this->promises.empty() && this->promises.front()->resource_handler->my_resources() <= this->current_sources){
         auto new_prom = this->promises.front();
         unsigned long req_res = new_prom->resource_handler->required_resources();
         this->current_sources -= req_res;
+        simulation_info->add_seized(this->getId(), false, new_prom->resource_handler->required_resources());
         new_prom->resource_handler->receive_resources(req_res);
         this->promises.pop();
         new_prom->satisfy();
@@ -106,6 +124,7 @@ void ResourceHandler::release(){
 }
 
 bool ResourceHandler::transfer_to(std::shared_ptr<ResourceHandler> next_handler, unsigned long number){
+    assert(this->service_line->getId() == next_handler->service_line->getId());
     if (this->current_resources >= number){
         this->current_resources -= number;
         next_handler->receive_resources(number);

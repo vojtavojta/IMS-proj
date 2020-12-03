@@ -6,7 +6,6 @@
 //
 
 #include "resourcePromiseClass.hpp"
-#include "resourceHandler.hpp"
 #include "facilityClass.hpp"
 
 
