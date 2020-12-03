@@ -6,10 +6,13 @@
 //
 
 #include "resourcePromiseClass.hpp"
-#include "storeClass.hpp"
+#include "resourceHandler.hpp"
+#include "facilityClass.hpp"
 
-ResourcePromise::ResourcePromise(unsigned long num_resources) {
-    this->resource_handler = std::shared_ptr<ResourceHandler>(new ResourceHandler(num_resources));
+
+ResourcePromise::ResourcePromise(unsigned long num_resources, std::shared_ptr<Facility> resources) {
+    this->resource_handler = std::shared_ptr<ResourceHandler>(new ResourceHandler(num_resources, resources));
+    this->resources = resources;
 }
 
 void ResourcePromise::satisfy() {
@@ -21,7 +24,9 @@ void ResourcePromise::satisfy() {
 void ResourcePromise::on_success(std::shared_ptr<RREvent> event){
     event->resource_handler = resource_handler;
     if (satisfied) {
-        fail_event->terminate();
+        if (fail_event != nullptr){
+            fail_event->terminate();
+        }
         event->behaviour();
     } else {
         this->success_event = event;
@@ -51,8 +56,8 @@ void ResourcePromise::on_fail(double wait_until, std::shared_ptr<Event> timed_ou
     fail_event->plan(current_time + wait_until);
 };
 
-void ResourcePromise::release() {
-    if(auto resources = this->resources.lock()) {
-        resources->release(this);
-    }
-}
+//void ResourcePromise::release() {
+//    if(auto resources = this->resources.lock()) {
+//        resources->release(this);
+//    }
+//}

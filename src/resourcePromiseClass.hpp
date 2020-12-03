@@ -10,18 +10,19 @@
 
 #include "eventClass.hpp"
 #include "identifiable.hpp"
-#include "resourceHandler.hpp"
+//#include "resourceHandler.hpp"
 
-class Resources;
+class ResourceHandler;
+class Facility;
 
 class ResourcePromise: public Identifieble {
-    std::weak_ptr<Resources> resources;
+    std::weak_ptr<Facility> resources;
     std::shared_ptr<RREvent> success_event{};
-    std::shared_ptr<Event> fail_event{};
+    std::shared_ptr<Event> fail_event;
 public:
     std::shared_ptr<ResourceHandler> resource_handler{};
     
-    void release();
+//    void release();
     
     void on_success(std::shared_ptr<RREvent> event);
     
@@ -33,7 +34,7 @@ public:
     
     // TODO friend
     bool satisfied = false;
-    ResourcePromise(unsigned long num_resources);
+    ResourcePromise(unsigned long num_resources, std::shared_ptr<Facility> resources);
     void satisfy();
     
 };

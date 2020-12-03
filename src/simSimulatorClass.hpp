@@ -10,7 +10,7 @@
 
 #include "priorityQueue.hpp"
 
-class Simulator {
+class Simulator: public std::enable_shared_from_this<Simulator> {
 private:
     double start_time;
     double end_time;

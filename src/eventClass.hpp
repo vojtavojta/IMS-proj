@@ -13,9 +13,13 @@
 #include "currentSimTime.hpp"
 #include <algorithm>
 #include "identifiable.hpp"
-#include "resourceHandler.hpp"
+
+class ResourceHandler;
 
 class PriorityQueue;
+
+
+
 
 /// Event class.
 class Event: public std::enable_shared_from_this<Event>, public Identifieble{
@@ -47,7 +51,6 @@ class RREvent: public Event {
 public:
     std::shared_ptr<ResourceHandler> resource_handler;
     RREvent();
-    void behaviour();
 };
 
 class LambdaBasedRREvent: public RREvent {

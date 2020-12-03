@@ -12,6 +12,7 @@ unsigned long long Identifieble::identifier = 0;
 unsigned long long Identifieble::nextIdentifier() {
     return Identifieble::identifier++;
 }
+
 Identifieble::Identifieble(){
     id = Identifieble::nextIdentifier();
 }

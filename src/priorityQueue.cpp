@@ -17,15 +17,21 @@ void PriorityQueue::insert_event(QueueElement event){
     if (events.size() == 0) {
         events.push_back(event);
     } else {
-        for (int i = 0; i > events.size(); i++) {
-            if (events[i]->time <= event->time) {
-                events.insert(events.begin() + i, event);
+        long long i = 0;
+        for (i = events.size()-1; i >= 0; i--) {
+            if (events[i]->time >= event->time) {
+                if (i == events.size()-1) {
+                    events.push_back(event);
+                } else {
+                    events.insert(events.begin() + i + 1, event);
+                }
                 break;
             }
-            if (i == events.size()-1) {
-                events.push_back(event);
-            }
         }
+        if (i == -1) {
+            events.insert(events.begin() + i + 1, event);
+        }
+        
     }
 }
 
@@ -56,7 +62,7 @@ QueueElement PriorityQueue::top_event(){
 }
 
 bool PriorityQueue::is_empty(){
-    if (this->events.size() != 0){
+    if (this->events.size() == 0){
         return true;
     } else {
         return false;

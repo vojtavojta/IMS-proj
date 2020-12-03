@@ -5,7 +5,9 @@
 //  Created by Radovan Klembara on 29/11/2020.
 //
 
+#include "eventClass.hpp"
 #include "priorityQueue.hpp"
+
 
 void Event::plan(double t){
     if (t >= current_time) {
@@ -48,8 +50,6 @@ void LambdaBasedEvent::behaviour() {
 
 
 RREvent::RREvent(): Event(){}
-
-void RREvent::behaviour(){}
 
 
 LambdaBasedRREvent::LambdaBasedRREvent(std::function<void (std::shared_ptr<ResourceHandler> r_handler)> event_behaviour): RREvent(){
