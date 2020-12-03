@@ -6,10 +6,14 @@
 //
 
 #include "simulationStatistics.hpp"
+#include "facilityClass.hpp"
 
 
-FacilityInfo::FacilityInfo(unsigned long long id){
-    this->id = id;
+FacilityInfo::FacilityInfo(Facility* fac){
+    this->facility = fac;
+    seized = 0;
+    left = 0;
+    released = 0;
 }
 
 void FacilityInfo::add_seized(){
@@ -36,8 +40,8 @@ void FacilityInfo::add_left(unsigned long number){
     this->left += number;
 }
 
-long long FacilityInfo::getId(){
-    return this->id;
+long long FacilityInfo::get_id(){
+    return this->facility->get_id();
 }
 
 SimulationStatistics::SimulationStatistics(){
@@ -54,36 +58,32 @@ void SimulationStatistics::set_output_file(std::string file_name){
     }
 }
 
-void SimulationStatistics::print_out(){
-    
+
+
+void SimulationStatistics::add_facility(Facility* fac){
+    this->facilities.push_back(FacilityInfo(fac));
 }
 
-void SimulationStatistics::add_facility(unsigned long long id){
-    this->facilities.push_back(FacilityInfo(id));
-}
-
-void SimulationStatistics::add_resources(unsigned long long id){
-    this->resources.push_back(FacilityInfo(id));
+void SimulationStatistics::add_resources(Facility* fac){
+    this->resources.push_back(FacilityInfo(fac));
 }
 
 long long SimulationStatistics::find_facility(unsigned long id){
     for (int i = 0; i > this->facilities.size(); i++) {
-        if (this->facilities[i].getId() == id) {
+        if (this->facilities[i].get_id() == id) {
             return i;
         }
     }
-    this->facilities.push_back(id);
-    return 0;
+    return -1;
 }
 
 long long SimulationStatistics::find_resource_facility(unsigned long id){
     for (int i = 0; i > this->resources.size(); i++) {
-        if (this->resources[i].getId() == id) {
+        if (this->resources[i].get_id() == id) {
             return i;
         }
     }
-    this->resources.push_back(id);
-    return 0;
+    return -1;
 }
 
 void SimulationStatistics::add_seized(unsigned long id, bool is_facility){
@@ -130,4 +130,31 @@ void SimulationStatistics::add_left(unsigned long id, bool is_facility, unsigned
     }
 }
 
-SimulationStatistics* simulation_info = new SimulationStatistics();
+
+
+void SimulationStatistics::print_out(){
+    *this->file_descriptor << "\nInformation about simulation events seizing facilities and resources\n\n";
+    *this->file_descriptor << "-----------------------------------------------------\n";
+    *this->file_descriptor << "|FACILITIES:                                        |\n";
+    *this->file_descriptor << "|===================================================|\n";
+    for (int i = 0; i < this->resources.size(); i++) {
+        *this->file_descriptor << "ID: " << this->facilities[i].facility->get_id() << " \n";
+        *this->file_descriptor << "Name: " << this->facilities[i].facility->name << " \n";
+        *this->file_descriptor << "Seized: " << this->facilities[i].seized << " \n";
+        *this->file_descriptor << "Released: " << this->facilities[i].released << " \n";
+        *this->file_descriptor << "Timed out: " << this->facilities[i].left << " \n";
+        *this->file_descriptor << "=====================================================\n";
+    }
+    *this->file_descriptor << "\n\n=====================================================\n";
+    *this->file_descriptor << "|Resources:                                         |\n";
+    *this->file_descriptor << "|===================================================|\n";
+    for (int i = 0; i < this->resources.size(); i++) {
+        *this->file_descriptor << "ID: " << this->resources[i].facility->get_id() << " \n";
+        *this->file_descriptor << "Name: " << this->resources[i].facility->name << " \n";
+        *this->file_descriptor << "Seized: " << this->resources[i].seized << " \n";
+        *this->file_descriptor << "Released: " << this->resources[i].released << " \n";
+        *this->file_descriptor << "Timed out: " << this->resources[i].left << " \n";
+        *this->file_descriptor << "=====================================================\n";
+    }
+    
+}

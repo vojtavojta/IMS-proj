@@ -23,22 +23,24 @@ class Error: public std::exception{
 };
 
 
+class Facility;
 
 struct FacilityInfo {
-    long long id;
+    Facility* facility;
     unsigned long seized;
     unsigned long released;
     unsigned long left;
 public:
     
-    FacilityInfo(unsigned long long id);
+    
+    FacilityInfo(Facility* fac);
     void add_seized();
     void add_seized(unsigned long number);
     void add_released();
     void add_released(unsigned long number);
     void add_left();
     void add_left(unsigned long number);
-    long long getId();
+    long long get_id();
 };
 
 
@@ -55,8 +57,8 @@ public:
     
     void set_output_file(std::string file_name);
     
-    void add_facility(unsigned long long id);
-    void add_resources(unsigned long long id);
+    void add_facility(Facility*);
+    void add_resources(Facility* );
     void print_out();
     
     void add_seized(unsigned long id, bool is_facility);
@@ -67,6 +69,5 @@ public:
     void add_left(unsigned long id, bool is_facility, unsigned long number);
 };
 
-extern SimulationStatistics* simulation_info;
 
 #endif /* simulationStatistics_hpp */

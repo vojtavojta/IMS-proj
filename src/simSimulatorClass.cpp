@@ -16,7 +16,6 @@ Simulator::Simulator(double sTime, double eTime){
     this->start_time = sTime;
     this->end_time = eTime;
     
-//    PriorityQueue::eventQueue = std::make_shared<PriorityQueue>();
     _g_curentTime = sTime;
 }
 

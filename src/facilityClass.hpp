@@ -14,6 +14,8 @@
 #include <algorithm>
 #include "simulationStatistics.hpp"
 
+extern SimulationStatistics* simulation_info;
+
 
 class ResourcePromise;
 
@@ -24,6 +26,7 @@ private:
     bool seized = false;
 
 public:
+    bool is_facility;
     std::queue<std::shared_ptr<ResourcePromise>> promises{};
     std::string name;
     
@@ -33,7 +36,6 @@ public:
     void get_back(unsigned long number);
     std::shared_ptr<ResourcePromise> seize_or_reserve();
     virtual bool busy();
-    void setName(std::string new_name);
 //    friend void ResourcePromise::on_fail(double wait_until, std::shared_ptr<Event> timed_out_event);
 //    friend void ResourcePromise::release();
 };

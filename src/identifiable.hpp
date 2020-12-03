@@ -16,7 +16,7 @@ public:
     unsigned long long id;
     
     Identifieble();
-    unsigned long long getId();
+    unsigned long long get_id();
     
 };
 

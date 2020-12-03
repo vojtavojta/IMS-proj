@@ -50,6 +50,7 @@ void ResourcePromise::on_fail(double wait_until, std::shared_ptr<Event> timed_ou
         if(auto resources = this->resources.lock()) {
             resources->remove_promise(this);
         }
+        simulation_info->add_left(resource_handler->service_line->get_id(), resource_handler->service_line->is_facility);
         timed_out_event->behaviour();
     }));
     fail_event->plan(current_time + wait_until);
