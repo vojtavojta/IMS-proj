@@ -37,7 +37,7 @@ public:
 //    friend void ResourcePromise::release();
 };
 
-class Resources: Facility {
+class Resources: public Facility{
 private:
 //    std::queue<std::shared_ptr<ResourcePromise>> promises{};
     unsigned long current_sources;

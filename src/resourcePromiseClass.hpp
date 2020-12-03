@@ -15,7 +15,7 @@
 class ResourceHandler;
 class Facility;
 
-class ResourcePromise: public Identifieble {
+class ResourcePromise: public Identifieble, public std::enable_shared_from_this<ResourcePromise> {
     std::weak_ptr<Facility> resources;
     std::shared_ptr<RREvent> success_event{};
     std::shared_ptr<Event> fail_event;
