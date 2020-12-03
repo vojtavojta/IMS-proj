@@ -48,9 +48,9 @@ void ResourcePromise::on_fail(double wait_until, std::shared_ptr<Event> timed_ou
     }
     fail_event = std::shared_ptr<Event>(new LambdaBasedEvent([timed_out_event, this]() {
         if(auto resources = this->resources.lock()) {
+            simulation_info->add_left(resource_handler->service_line->get_id(), resource_handler->service_line->is_facility);
             resources->remove_promise(this);
         }
-        simulation_info->add_left(resource_handler->service_line->get_id(), resource_handler->service_line->is_facility);
         timed_out_event->behaviour();
     }));
     fail_event->plan(current_time + wait_until);

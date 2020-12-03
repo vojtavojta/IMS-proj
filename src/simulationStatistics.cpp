@@ -69,7 +69,7 @@ void SimulationStatistics::add_resources(Facility* fac){
 }
 
 long long SimulationStatistics::find_facility(unsigned long id){
-    for (int i = 0; i > this->facilities.size(); i++) {
+    for (int i = 0; i < this->facilities.size(); i++) {
         if (this->facilities[i].get_id() == id) {
             return i;
         }
@@ -78,7 +78,7 @@ long long SimulationStatistics::find_facility(unsigned long id){
 }
 
 long long SimulationStatistics::find_resource_facility(unsigned long id){
-    for (int i = 0; i > this->resources.size(); i++) {
+    for (int i = 0; i < this->resources.size(); i++) {
         if (this->resources[i].get_id() == id) {
             return i;
         }
@@ -120,12 +120,15 @@ void SimulationStatistics::add_left(unsigned long id, bool is_facility){
 
 void SimulationStatistics::add_left(unsigned long id, bool is_facility, unsigned long number){
     if (is_facility) {
+        if (id > 10) {
+            std::cerr << "adsf";
+        }
         long long index = find_facility(id);
-        assert(index == -1);
+        assert(index != -1);
         this->facilities[index].add_left(number);
     } else {
         long long index = find_resource_facility(id);
-        assert(index == -1);
+        assert(index != -1);
         this->resources[index].add_left(number);
     }
 }
@@ -135,25 +138,25 @@ void SimulationStatistics::add_left(unsigned long id, bool is_facility, unsigned
 void SimulationStatistics::print_out(){
     *this->file_descriptor << "\nInformation about simulation events seizing facilities and resources\n\n";
     *this->file_descriptor << "-----------------------------------------------------\n";
-    *this->file_descriptor << "|FACILITIES:                                        |\n";
-    *this->file_descriptor << "|===================================================|\n";
+    *this->file_descriptor << "| FACILITIES:                                       |\n";
+    *this->file_descriptor << "|====================================================\n";
     for (int i = 0; i < this->resources.size(); i++) {
-        *this->file_descriptor << "ID: " << this->facilities[i].facility->get_id() << " \n";
-        *this->file_descriptor << "Name: " << this->facilities[i].facility->name << " \n";
-        *this->file_descriptor << "Seized: " << this->facilities[i].seized << " \n";
-        *this->file_descriptor << "Released: " << this->facilities[i].released << " \n";
-        *this->file_descriptor << "Timed out: " << this->facilities[i].left << " \n";
-        *this->file_descriptor << "=====================================================\n";
+        *this->file_descriptor << "| ID: " << this->facilities[i].facility->get_id() << " \n";
+        *this->file_descriptor << "| Name: " << this->facilities[i].facility->name << " \n";
+        *this->file_descriptor << "| Seized: " << this->facilities[i].seized << " \n";
+        *this->file_descriptor << "| Released: " << this->facilities[i].released << " \n";
+        *this->file_descriptor << "| Timed out: " << this->facilities[i].left << " \n";
+        *this->file_descriptor << "|====================================================\n";
     }
-    *this->file_descriptor << "\n\n=====================================================\n";
-    *this->file_descriptor << "|Resources:                                         |\n";
-    *this->file_descriptor << "|===================================================|\n";
+    *this->file_descriptor << "\n=====================================================\n";
+    *this->file_descriptor << "| Resources:                                        |\n";
+    *this->file_descriptor << "|====================================================\n";
     for (int i = 0; i < this->resources.size(); i++) {
-        *this->file_descriptor << "ID: " << this->resources[i].facility->get_id() << " \n";
-        *this->file_descriptor << "Name: " << this->resources[i].facility->name << " \n";
-        *this->file_descriptor << "Seized: " << this->resources[i].seized << " \n";
-        *this->file_descriptor << "Released: " << this->resources[i].released << " \n";
-        *this->file_descriptor << "Timed out: " << this->resources[i].left << " \n";
+        *this->file_descriptor << "| ID: " << this->resources[i].facility->get_id() << " \n";
+        *this->file_descriptor << "| Name: " << this->resources[i].facility->name << " \n";
+        *this->file_descriptor << "| Seized: " << this->resources[i].seized << " \n";
+        *this->file_descriptor << "| Released: " << this->resources[i].released << " \n";
+        *this->file_descriptor << "| Timed out: " << this->resources[i].left << " \n";
         *this->file_descriptor << "=====================================================\n";
     }
     
