@@ -7,6 +7,8 @@
 
 #include "simulationStatistics.hpp"
 #include "facilityClass.hpp"
+#include <cassert>
+
 
 
 FacilityInfo::FacilityInfo(Facility* fac){

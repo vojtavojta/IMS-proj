@@ -8,6 +8,8 @@
 #include "facilityClass.hpp"
 #include "resourcePromiseClass.hpp"
 #include <iostream>
+#include <cassert>
+
 
 SimulationStatistics* simulation_info = new SimulationStatistics();
 
