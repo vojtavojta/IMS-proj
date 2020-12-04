@@ -11,32 +11,48 @@
 #include <string>
 #include <queue>
 #include <algorithm>
+#include <vector>
 #include "simulationStatistics.hpp"
 #include "identifiable.hpp"
 
+#define HIGHER_PRIO -1
+#define LOWER_PRIO -2
+ 
 extern SimulationStatistics* simulation_info;
 
 
 class ResourcePromise;
 
 
-//struct priorityPromiseElement
+struct PriorityQueuePromiseElement {
+    int priority;
+    std::queue<std::shared_ptr<ResourcePromise>> promises {};
+    PriorityQueuePromiseElement(int priority);
+};
 
 class Facility: public std::enable_shared_from_this<Facility>, public Identifiable {
-private:
-    
+public:
     bool seized = false;
 
-public:
+    long get_index_to_queues(int priority);
     bool is_facility;
-    std::queue<std::shared_ptr<ResourcePromise>> promises{};
+    std::vector<PriorityQueuePromiseElement> queues;
     std::string name;
     
     Facility(std::string name);
+    
+    bool is_queues_empty();
+    std::shared_ptr<ResourcePromise> get_promise_from_queue();
+
     unsigned long queue_len();
+    unsigned long queue_len(int priority);
+    
     void remove_promise(ResourcePromise *);
+    void remove_promise(ResourcePromise * promise, int priority);
     virtual void get_back(unsigned long number);
-    std::shared_ptr<ResourcePromise> seize_or_reserve();
+    virtual std::shared_ptr<ResourcePromise> seize_or_reserve();
+    virtual std::shared_ptr<ResourcePromise> seize_or_reserve(int priority);
+    void insert_promise(std::shared_ptr<ResourcePromise> promise);
     virtual bool busy();
 //    friend void ResourcePromise::on_fail(double wait_until, std::shared_ptr<Event> timed_out_event);
 //    friend void ResourcePromise::release();
@@ -51,8 +67,10 @@ private:
 //    void remove_promise(ResourcePromise *);
 //    void release(ResourcePromise* promise);
 public:
-    void  get_back(unsigned long number) override;
+    void get_back(unsigned long number) override;
     std::shared_ptr<ResourcePromise> seize_or_reserve(unsigned long source_number);
+    std::shared_ptr<ResourcePromise> seize_or_reserve(unsigned long source_number, int priority);
+
     Resources(std::string name, unsigned long sources);
 //    void setName(std::string new_name);
     

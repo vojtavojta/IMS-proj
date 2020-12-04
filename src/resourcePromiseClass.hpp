@@ -21,8 +21,10 @@ class ResourcePromise: public Identifiable, public std::enable_shared_from_this<
     std::shared_ptr<Event> fail_event;
 public:
     std::shared_ptr<ResourceHandler> resource_handler{};
+    int priority;
     
-//    void release();
+    ResourcePromise(unsigned long num_resources, std::shared_ptr<Facility> resources);
+    ResourcePromise(unsigned long num_resources, std::shared_ptr<Facility> resources, int priority);
     
     void on_success(std::shared_ptr<RREvent> event);
     
@@ -33,7 +35,6 @@ public:
     void on_fail(double wait_until, std::shared_ptr<Event> timed_out_event);
     
     bool satisfied = false;
-    ResourcePromise(unsigned long num_resources, std::shared_ptr<Facility> resources);
     void satisfy();
     
 };

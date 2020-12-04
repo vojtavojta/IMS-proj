@@ -11,6 +11,11 @@
 
 SimulationStatistics* simulation_info = new SimulationStatistics();
 
+PriorityQueuePromiseElement::PriorityQueuePromiseElement(int priority){
+    this->priority = priority;
+}
+
+
 Facility::Facility(std::string name){
     this->name = name;
     this->seized = false;
@@ -19,55 +24,128 @@ Facility::Facility(std::string name){
 }
 
 bool Facility::busy(){
-    if (this->promises.empty()) {
-        return false;
-    } else {
+    if (this->seized) {
         return true;
+    } else {
+        return false;
     }
 }
 
 unsigned long Facility::queue_len(){
-    return this->promises.size();
+    return this->queues[0].promises.size(); 
+}
+
+unsigned long Facility::queue_len(int priority){
+    for (int i = 0; i < this->queues.size(); i++) {
+        if (this->queues[i].priority == priority) {
+            return queues[i].promises.size();
+        }
+    }
+    return 0;
+}
+
+long Facility::get_index_to_queues(int priority){
+    for (int i = 0; i < this->queues.size(); i++) {
+        if (this->queues[i].priority == priority) {
+            return i;
+        }
+    }
+    if (this->queues.size() == 0) {
+        return HIGHER_PRIO;
+    }
+    if (this->queues[this->queues.size()-1].priority > priority) {
+        return LOWER_PRIO;
+    }
+    return HIGHER_PRIO;
 }
 
 std::shared_ptr<ResourcePromise> Facility::seize_or_reserve(){
+    return this->seize_or_reserve(0);
+}
+
+void Facility::insert_promise(std::shared_ptr<ResourcePromise> promise){
+    for (int i = 0; i < this->queues.size(); i++) {
+        if (this->queues[i].priority == promise->priority) {
+            this->queues[i].promises.push(promise);
+            return;
+        } if (this->queues[i].priority > promise->priority) {
+            PriorityQueuePromiseElement tmp = PriorityQueuePromiseElement(promise->priority);
+            this->queues.insert(queues.begin() + i, tmp);
+            return;
+        }
+    }
+    PriorityQueuePromiseElement tmp = PriorityQueuePromiseElement(promise->priority);
+    tmp.promises.push(promise);
+    this->queues.push_back(tmp);
+}
+
+std::shared_ptr<ResourcePromise> Facility::seize_or_reserve(int priority){
     auto ptr_this = shared_from_this();
     auto promise = std::make_shared<ResourcePromise>(1, ptr_this);
-    if (!seized && this->promises.empty()) {
-        promise->satisfied = true;
-        seized = true;
-        simulation_info->add_seized(this->get_id(), true);
-        promise->resource_handler->receive_resources(1);
+    long index = get_index_to_queues(0);
+    if (!seized) {
+        if(index == HIGHER_PRIO){
+            promise->satisfied = true;
+            seized = true;
+            simulation_info->add_seized(this->get_id(), true);
+            promise->resource_handler->receive_resources(1);
+        } else {
+            insert_promise(promise);
+        }
     } else {
-        this->promises.push(promise);
+        insert_promise(promise);
     }
     return promise;
+}
+
+bool Facility::is_queues_empty(){
+    for (int i = 0; i < queues.size(); i++) {
+        if (!this->queues[i].promises.empty()) {
+            return false;
+        }
+    }
+    return true;
+}
+
+std::shared_ptr<ResourcePromise> Facility::get_promise_from_queue(){
+    std::shared_ptr<ResourcePromise> r = this->queues[this->queues.size()-1].promises.front();
+    this->queues[this->queues.size()-1].promises.pop();
+    if (this->queues[this->queues.size()-1].promises.size() == 0 && this->queues.size()) {
+        this->queues.pop_back();
+    }
+    return r;
 }
 
 void Facility::get_back(unsigned long number){
     assert(number == 1);
     this->seized = false;
     simulation_info->add_released(this->get_id(), true);
-    if(!this->promises.empty()){
-        auto new_prom = this->promises.front();
+    if(!this->is_queues_empty()){
+        auto new_prom = this->get_promise_from_queue();
         this->seized = true;
         simulation_info->add_seized(this->get_id(), true);
         new_prom->resource_handler->receive_resources(1);
-        this->promises.pop();
         new_prom->satisfy();
     }
 }
 
 void Facility::remove_promise(ResourcePromise * promise){
+    remove_promise(promise, 0);
+}
+
+void Facility::remove_promise(ResourcePromise * promise, int priority){
     std::queue<std::shared_ptr<ResourcePromise>> new_queue{};
-    while (!this->promises.empty()) {
-        std::shared_ptr<ResourcePromise> tmp = this->promises.front();
-        this->promises.pop();
-        if (tmp->id != promise->id) {
-            new_queue.push(tmp);
+    long index = this->get_index_to_queues(0);
+    if(index >= 0){
+        while (!this->queues[index].promises.empty()) {
+            std::shared_ptr<ResourcePromise> tmp = this->queues[index].promises.front();
+            this->queues[index].promises.pop();
+            if (tmp->id != promise->id) {
+                new_queue.push(tmp);
+            }
         }
+        this->queues[index].promises = new_queue;
     }
-    this->promises = new_queue;
 }
 
 
@@ -81,33 +159,50 @@ Resources::Resources(std::string name, unsigned long sources): Facility(name){
 }
 
 std::shared_ptr<ResourcePromise> Resources::seize_or_reserve(unsigned long source_number){
+    return this->seize_or_reserve(source_number, 0);
+}
+
+std::shared_ptr<ResourcePromise> Resources::seize_or_reserve(unsigned long source_number, int priority){
     auto ptr_this = shared_from_this();
     std::shared_ptr<ResourcePromise> promise(new ResourcePromise(source_number, ptr_this));
-    if (this->current_sources >= source_number && this->promises.empty()) {
-        promise->satisfied = true;
-        simulation_info->add_seized(this->get_id(), false, source_number);
-        this->current_sources -= source_number;
-        promise->resource_handler->receive_resources(source_number);
+    long index = get_index_to_queues(priority);
+    if (this->current_sources >= source_number) {
+        if(index == HIGHER_PRIO){
+            promise->satisfied = true;
+            seized = true;
+            simulation_info->add_seized(this->get_id(), false, source_number);
+            this->current_sources -= source_number;
+            promise->resource_handler->receive_resources(source_number);
+        } else {
+            insert_promise(promise);
+        }
     } else {
-        this->promises.push(promise);
+        insert_promise(promise);
     }
     return promise;
+    
 }
 
 void Resources::get_back(unsigned long number){
     this->current_sources += number;
     simulation_info->add_released(this->get_id(), false, number);
-    if(!this->promises.empty() && this->promises.front()->resource_handler->my_resources() <= this->current_sources){
-        auto new_prom = this->promises.front();
-        unsigned long req_res = new_prom->resource_handler->required_resources();
-        this->current_sources -= req_res;
-        simulation_info->add_seized(this->get_id(), false, new_prom->resource_handler->required_resources());
-        new_prom->resource_handler->receive_resources(req_res);
-        this->promises.pop();
+    if(!this->is_queues_empty()){
+        auto new_prom = this->get_promise_from_queue();
+        if (new_prom->resource_handler->required_resources() < this->current_sources) {
+            unsigned long req_res = new_prom->resource_handler->required_resources();
+            this->current_sources -= req_res;
+            simulation_info->add_seized(this->get_id(), false, new_prom->resource_handler->required_resources());
+            new_prom->resource_handler->receive_resources(req_res);
+            new_prom->satisfy();
+        } else {
+            insert_promise(new_prom);
+        }
+        this->seized = true;
+        simulation_info->add_seized(this->get_id(), true);
+        new_prom->resource_handler->receive_resources(1);
         new_prom->satisfy();
     }
 }
-
 
 
 ResourceHandler::ResourceHandler(unsigned long req_resources, std::shared_ptr<Facility> service_line){

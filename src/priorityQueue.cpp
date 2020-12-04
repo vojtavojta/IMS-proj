@@ -30,6 +30,12 @@ void EventPriorityQueue::insert_event(QueueElement event){
                             events.insert(events.begin() + i + 1, event);
                         }
                     }
+                } else {
+                    if (i == events.size()-1) {
+                        events.push_back(event);
+                    } else {
+                        events.insert(events.begin() + i + 1, event);
+                    }
                 }
                 break;
             }

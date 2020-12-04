@@ -12,6 +12,13 @@
 ResourcePromise::ResourcePromise(unsigned long num_resources, std::shared_ptr<Facility> resources) {
     this->resource_handler = std::shared_ptr<ResourceHandler>(new ResourceHandler(num_resources, resources));
     this->resources = resources;
+    this->priority = 0;
+}
+
+ResourcePromise::ResourcePromise(unsigned long num_resources, std::shared_ptr<Facility> resources, int priority) {
+    this->resource_handler = std::shared_ptr<ResourceHandler>(new ResourceHandler(num_resources, resources));
+    this->resources = resources;
+    this->priority = priority;
 }
 
 void ResourcePromise::satisfy() {
