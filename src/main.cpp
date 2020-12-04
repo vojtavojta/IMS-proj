@@ -10,8 +10,9 @@
 #include "simSimLib.hpp"
 
 
-auto narocne = std::make_shared<Facility>("Narocne");
+//auto narocne = std::make_shared<Facility>("Narocne");
 auto normalni = std::make_shared<Facility>("Normalni");
+auto kosik = std::make_shared<Resources>("kosik", 4);
 
 
 
@@ -57,7 +58,7 @@ class zakaznik:public Event{
     void behaviour() override {
         if(rand()%10 < 4 ){
             std::cout << "zakaznik created " << this->get_id() << "\n";
-            auto a = narocne->seize_or_reserve();
+            auto a = kosik->seize_or_reserve(1);
             auto w = std::make_shared<work>();
             auto l = [](){
                 std::cout << "I am leaving\n";
@@ -69,7 +70,7 @@ class zakaznik:public Event{
             auto a = normalni->seize_or_reserve();
             auto w = std::make_shared<weak_work>();
             auto l = std::make_shared<leave>();
-            a->on_fail(20, l);
+            a->on_fail(4, l);
             a->on_success(w);
         }
     }
@@ -84,12 +85,13 @@ class generator: public Event{
 };
 
 int main(int argc, const char * argv[]) {
+    std::cout << "start\n";
     auto sim = std::make_shared<Simulator>(0, 100);
     std::cout << "simulator created\n";
     auto a = std::make_shared<generator>();
     a->plan();
     std::cout << "genterator prepared\n";
     sim->run();
-    std::cout << "Hello, World!\n";
+    simulation_info->print_out();
     return 0;
 }

@@ -7,6 +7,7 @@
 
 #include "facilityClass.hpp"
 #include "resourcePromiseClass.hpp"
+#include <iostream>
 
 SimulationStatistics* simulation_info = new SimulationStatistics();
 
