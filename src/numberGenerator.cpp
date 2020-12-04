@@ -12,7 +12,7 @@ double Random(void) {
 }
 
 double Exp_Random(double lambda) {
-    double result = -1 * ((log(1-Random()))/lambda);
+    double result = -1 * lambda * log(Random());
     return result;
 }
 
