@@ -13,19 +13,23 @@
 #include "currentSimTime.hpp"
 #include <algorithm>
 #include "identifiable.hpp"
+#include "facilityClass.hpp"
 
-class ResourceHandler;
 
-class PriorityQueue;
+class EventPriorityQueue;
 
 
 
 
 /// Event class.
-class Event: public std::enable_shared_from_this<Event>, public Identifieble{
+class Event: public std::enable_shared_from_this<Event>, public Identifiable{
 public:
     double time;
-
+    int priority;
+    
+    Event();
+    Event(int priority);
+    
     /// Inserts itself into event queue caledar.
     /// @param t time when should this event will be planned
     void plan(double t);
@@ -49,8 +53,11 @@ public:
 
 class RREvent: public Event {
 public:
-    std::shared_ptr<ResourceHandler> resource_handler;
     RREvent();
+    void terminate_with_release();
+    void terminate_with_release(std::function<void ()> lambda);
+    std::shared_ptr<ResourceHandler> resource_handler;
+    
 };
 
 class LambdaBasedRREvent: public RREvent {

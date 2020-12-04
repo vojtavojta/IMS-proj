@@ -7,23 +7,29 @@
 
 #include "priorityQueue.hpp"
 
-std::shared_ptr<PriorityQueue> PriorityQueue::eventQueue = std::shared_ptr<PriorityQueue>(new PriorityQueue());
+std::shared_ptr<EventPriorityQueue> EventPriorityQueue::eventQueue = std::shared_ptr<EventPriorityQueue>(new EventPriorityQueue());
 
-PriorityQueue::PriorityQueue(){
+EventPriorityQueue::EventPriorityQueue(){
     this->events = std::vector<QueueElement>();
 }
 
-void PriorityQueue::insert_event(QueueElement event){
+void EventPriorityQueue::insert_event(QueueElement event){
     if (events.size() == 0) {
         events.push_back(event);
     } else {
         long long i = 0;
         for (i = events.size()-1; i >= 0; i--) {
             if (events[i]->time >= event->time) {
-                if (i == events.size()-1) {
-                    events.push_back(event);
-                } else {
-                    events.insert(events.begin() + i + 1, event);
+                if(events[i]->time == event->time){
+                    if (events[i]->priority > event->priority) {
+                        events.insert(events.begin() + i, event);
+                    } else {
+                        if (i == events.size()-1) {
+                            events.push_back(event);
+                        } else {
+                            events.insert(events.begin() + i + 1, event);
+                        }
+                    }
                 }
                 break;
             }
@@ -35,7 +41,7 @@ void PriorityQueue::insert_event(QueueElement event){
     }
 }
 
-bool PriorityQueue::delete_event(unsigned long id){
+bool EventPriorityQueue::delete_event(unsigned long id){
     int index = -1;
     for (int i = 0; i < events.size(); i++) {
         if (events[i]->get_id() == id) {
@@ -51,17 +57,17 @@ bool PriorityQueue::delete_event(unsigned long id){
     }
 }
 
-QueueElement PriorityQueue::pop_event(){
+QueueElement EventPriorityQueue::pop_event(){
     QueueElement tmp = this->top_event();
     this->events.pop_back();
     return tmp;
 }
 
-QueueElement PriorityQueue::top_event(){
+QueueElement EventPriorityQueue::top_event(){
     return this->events[this->events.size()-1];
 }
 
-bool PriorityQueue::is_empty(){
+bool EventPriorityQueue::is_empty(){
     if (this->events.size() == 0){
         return true;
     } else {

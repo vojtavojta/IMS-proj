@@ -14,13 +14,8 @@
 #include <memory>
 #include <iostream>
 #include <fstream>
+#include "StatisticsOutput.hpp"
 
-
-class Error: public std::exception{
-    virtual const char* what() const throw(){
-        return "Can't open output file\n";
-    }
-};
 
 
 class Facility;
@@ -31,8 +26,6 @@ struct FacilityInfo {
     unsigned long released;
     unsigned long left;
 public:
-    
-    
     FacilityInfo(Facility* fac);
     void add_seized();
     void add_seized(unsigned long number);
@@ -44,8 +37,7 @@ public:
 };
 
 
-class SimulationStatistics {
-    std::ostream* file_descriptor;
+class SimulationStatistics: public Stat {
     double start_time;
     double end_time;
     std::vector<FacilityInfo> facilities{};
@@ -54,12 +46,12 @@ class SimulationStatistics {
     long long find_resource_facility(unsigned long id);
 public:
     SimulationStatistics();
-    
-    void set_output_file(std::string file_name);
-    
+        
     void add_facility(Facility*);
+    void remove_last_facility();
     void add_resources(Facility* );
-    void print_out();
+    
+    void print_out() override;
     
     void add_seized(unsigned long id, bool is_facility);
     void add_seized(unsigned long id, bool is_facility, unsigned long number);

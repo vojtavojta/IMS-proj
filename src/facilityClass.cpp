@@ -76,6 +76,7 @@ Resources::Resources(std::string name, unsigned long sources): Facility(name){
     this->capacity = sources;
     this->current_sources = sources;
     simulation_info->add_resources(this);
+    simulation_info->remove_last_facility();
     this->is_facility = false;
 }
 

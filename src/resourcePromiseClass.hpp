@@ -15,7 +15,7 @@
 class ResourceHandler;
 class Facility;
 
-class ResourcePromise: public Identifieble, public std::enable_shared_from_this<ResourcePromise> {
+class ResourcePromise: public Identifiable, public std::enable_shared_from_this<ResourcePromise> {
     std::weak_ptr<Facility> resources;
     std::shared_ptr<RREvent> success_event{};
     std::shared_ptr<Event> fail_event;
@@ -32,7 +32,6 @@ public:
     
     void on_fail(double wait_until, std::shared_ptr<Event> timed_out_event);
     
-    // TODO friend
     bool satisfied = false;
     ResourcePromise(unsigned long num_resources, std::shared_ptr<Facility> resources);
     void satisfy();

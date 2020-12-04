@@ -68,7 +68,14 @@ class zakaznik:public Event{
         } else {
             std::cout << "zakaznik weak created " << this->get_id() << "\n";
             auto a = normalni->seize_or_reserve();
-            auto w = std::make_shared<weak_work>();
+//            auto w = std::make_shared<weak_work>();
+            auto r = a->resource_handler;
+            auto w = [](std::shared_ptr<ResourceHandler> r){
+                std::cout << "zakaznik weak work  LAMBDA \n";
+                auto workingg = std::make_shared<working_weak>();
+                workingg->resource_handler = r;
+                workingg->plan(current_time + 10);
+            };
             auto l = std::make_shared<leave>();
             a->on_fail(4, l);
             a->on_success(w);
@@ -86,7 +93,7 @@ class generator: public Event{
 
 int main(int argc, const char * argv[]) {
     std::cout << "start\n";
-    auto sim = std::make_shared<Simulator>(0, 100);
+    auto sim = std::make_shared<Simulator>(0, 50);
     std::cout << "simulator created\n";
     auto a = std::make_shared<generator>();
     a->plan();

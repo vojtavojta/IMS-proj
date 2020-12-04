@@ -8,14 +8,14 @@
 #ifndef identifiable_hpp
 #define identifiable_hpp
 
-class Identifieble{
+class Identifiable{
     static unsigned long long identifier;
 public:
     static unsigned long long nextIdentifier();
     
     unsigned long long id;
     
-    Identifieble();
+    Identifiable();
     unsigned long long get_id();
     
 };

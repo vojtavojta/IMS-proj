@@ -13,12 +13,12 @@
 
 typedef std::shared_ptr<Event> QueueElement;
 
-class PriorityQueue {
+class EventPriorityQueue {
 private:
     std::vector<QueueElement> events;
 public:
-    static std::shared_ptr<PriorityQueue> eventQueue;
-    PriorityQueue();
+    static std::shared_ptr<EventPriorityQueue> eventQueue;
+    EventPriorityQueue();
     void insert_event(QueueElement event);
     bool delete_event(unsigned long id);
     QueueElement pop_event();

@@ -8,13 +8,20 @@
 #include "eventClass.hpp"
 #include "priorityQueue.hpp"
 
+Event::Event(){
+    priority = 0;
+}
+
+Event::Event(int priority){
+    this->priority = priority;
+}
 
 void Event::plan(double t){
     if (t >= current_time) {
         this->time = t;
         auto tmp = shared_from_this();
         tmp->time = t;
-        PriorityQueue::eventQueue->insert_event(tmp);
+        EventPriorityQueue::eventQueue->insert_event(tmp);
     }
 }
 
@@ -22,14 +29,14 @@ void Event::plan(){
     this->time = current_time;
     auto tmp = shared_from_this();
     tmp->time = current_time;
-    PriorityQueue::eventQueue->insert_event(tmp);
+    EventPriorityQueue::eventQueue->insert_event(tmp);
 }
 
 void Event::terminate(unsigned long ident){
-    PriorityQueue::eventQueue->delete_event(ident);
+    EventPriorityQueue::eventQueue->delete_event(ident);
 }
 void Event::terminate(){
-    PriorityQueue::eventQueue->delete_event(get_id());
+    EventPriorityQueue::eventQueue->delete_event(get_id());
 }
 
 void Event::behaviour() {}
@@ -60,4 +67,13 @@ void LambdaBasedRREvent::behaviour(){
     event_behaviour(this->resource_handler);
 }
 
+void RREvent::terminate_with_release(){
+    this->terminate();
+    this->resource_handler->release();
+}
 
+void RREvent::terminate_with_release(std::function<void ()> lambda){
+    this->terminate();
+    this->resource_handler->release();
+    lambda();
+}

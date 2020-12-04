@@ -44,21 +44,14 @@ long long FacilityInfo::get_id(){
     return this->facility->get_id();
 }
 
-SimulationStatistics::SimulationStatistics(){
-    this->file_descriptor = &(std::cout);
-}
+SimulationStatistics::SimulationStatistics(){}
 
-void SimulationStatistics::set_output_file(std::string file_name){
-    std::ofstream fout;
-    fout.open(file_name.c_str());
-    if (fout.is_open()) {
-        this->file_descriptor = &fout;
-    } else {
-        throw new Error;
+
+void SimulationStatistics::remove_last_facility(){
+    if (this->facilities.size() > 0) {
+        this->facilities.pop_back();
     }
 }
-
-
 
 void SimulationStatistics::add_facility(Facility* fac){
     this->facilities.push_back(FacilityInfo(fac));
@@ -120,9 +113,6 @@ void SimulationStatistics::add_left(unsigned long id, bool is_facility){
 
 void SimulationStatistics::add_left(unsigned long id, bool is_facility, unsigned long number){
     if (is_facility) {
-        if (id > 10) {
-            std::cerr << "adsf";
-        }
         long long index = find_facility(id);
         assert(index != -1);
         this->facilities[index].add_left(number);
@@ -134,11 +124,10 @@ void SimulationStatistics::add_left(unsigned long id, bool is_facility, unsigned
 }
 
 
-
-void SimulationStatistics::print_out(){
+void  SimulationStatistics::print_out(){
     *this->file_descriptor << "\nInformation about simulation events seizing facilities and resources\n\n";
     *this->file_descriptor << "-----------------------------------------------------\n";
-    *this->file_descriptor << "| FACILITIES:                                       |\n";
+    *this->file_descriptor << "| FACILITIES: "<< this->facilities.size()<< "\n";
     *this->file_descriptor << "|====================================================\n";
     for (int i = 0; i < this->resources.size(); i++) {
         *this->file_descriptor << "| ID: " << this->facilities[i].facility->get_id() << " \n";
@@ -149,7 +138,7 @@ void SimulationStatistics::print_out(){
         *this->file_descriptor << "|====================================================\n";
     }
     *this->file_descriptor << "\n=====================================================\n";
-    *this->file_descriptor << "| Resources:                                        |\n";
+    *this->file_descriptor << "| Resources: "<< this->resources.size()<<"\n";
     *this->file_descriptor << "|====================================================\n";
     for (int i = 0; i < this->resources.size(); i++) {
         *this->file_descriptor << "| ID: " << this->resources[i].facility->get_id() << " \n";

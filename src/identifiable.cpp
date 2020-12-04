@@ -7,16 +7,16 @@
 
 #include "identifiable.hpp"
 
-unsigned long long Identifieble::identifier = 0;
+unsigned long long Identifiable::identifier = 0;
     
-unsigned long long Identifieble::nextIdentifier() {
-    return Identifieble::identifier++;
+unsigned long long Identifiable::nextIdentifier() {
+    return Identifiable::identifier++;
 }
 
-Identifieble::Identifieble(){
-    id = Identifieble::nextIdentifier();
+Identifiable::Identifiable(){
+    id = Identifiable::nextIdentifier();
 }
 
-unsigned long long Identifieble::get_id(){
+unsigned long long Identifiable::get_id(){
     return this->id;
 }

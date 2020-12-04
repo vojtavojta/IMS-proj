@@ -5,14 +5,25 @@
 #include <cmath>
 #include "numberGenerator.hpp"
 
+GeneratedNumberStatistics* generated_numbers_statistics = new GeneratedNumberStatistics();
+
 
 double Random(void) {
     ix = ix * 69069L + 1; // implicit modulo
-    return ix / ((double)ULONG_MAX + 1);
+    double tmp = ix / ((double)ULONG_MAX + 1);
+    generated_numbers_statistics->add_value(RANDOM, tmp);
+    return tmp;
+}
+
+double __Random(void){
+    ix = ix * 69069L + 1; // implicit modulo
+    double tmp = ix / ((double)ULONG_MAX + 1);
+    return tmp;
 }
 
 double Exp_Random(double lambda) {
-    double result = -1 * ((log(1-Random()))/lambda);
+    double result = -1 * ((log(1-__Random()))/lambda);
+    generated_numbers_statistics->add_value(EXP, result);
     return result;
 }
 
@@ -23,11 +34,14 @@ double Norm_Random(double m, double s) {
         x = X_For_Norm_Distribution(m,s);
         y = Y_For_Norm_Distribution(m, s);
     } while (y > Norm_Distribution_Function(x,m,s));
+    generated_numbers_statistics->add_value(NORM, x);
     return x;
 }
 
 double Uniform_Random(double min, double max) {
-    return (min + (Random() * (max - min)));
+    double tmp = (min + (__Random() * (max - min)));
+    generated_numbers_statistics->add_value(UNIFORM, tmp);
+    return tmp;
 }
 
 double Norm_Distribution_Function(double x, double m, double s)//only norm form generating < y8vzslost na x misto kteryho mam tedka jen rand
@@ -41,13 +55,13 @@ double Norm_Distribution_Function(double x, double m, double s)//only norm form 
 
 double Y_For_Norm_Distribution(double m, double s) {
    double max = Norm_Distribution_Function(m, m, s);
-   return Random() * max;
+   return __Random() * max;
 }
 
 double X_For_Norm_Distribution(double m, double s) {
     double max = m + (SIGMA_MULTIPLE * s);
     double min = m - (SIGMA_MULTIPLE * s);
-    return (min + (Random() * (max - min)));
+    return (min + (__Random() * (max - min)));
 
 }
 
@@ -55,7 +69,7 @@ void Test_Random(int number_of_iterations) {
     int n_0 = 0, n_1 = 0, n_2 = 0, n_3 = 0;
     double j;
     for (int i = 0; i < number_of_iterations; i++) {
-        j = Random();
+        j = __Random();
         if (j < 0.25) {
             n_0++;
         }

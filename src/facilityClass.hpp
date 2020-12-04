@@ -8,11 +8,11 @@
 #ifndef facilityClass_hpp
 #define facilityClass_hpp
 
-#include "eventClass.hpp"
 #include <string>
 #include <queue>
 #include <algorithm>
 #include "simulationStatistics.hpp"
+#include "identifiable.hpp"
 
 extern SimulationStatistics* simulation_info;
 
@@ -20,7 +20,9 @@ extern SimulationStatistics* simulation_info;
 class ResourcePromise;
 
 
-class Facility: public std::enable_shared_from_this<Facility>, public Identifieble {
+//struct priorityPromiseElement
+
+class Facility: public std::enable_shared_from_this<Facility>, public Identifiable {
 private:
     
     bool seized = false;
@@ -33,7 +35,7 @@ public:
     Facility(std::string name);
     unsigned long queue_len();
     void remove_promise(ResourcePromise *);
-    void get_back(unsigned long number);
+    virtual void get_back(unsigned long number);
     std::shared_ptr<ResourcePromise> seize_or_reserve();
     virtual bool busy();
 //    friend void ResourcePromise::on_fail(double wait_until, std::shared_ptr<Event> timed_out_event);
@@ -48,8 +50,8 @@ private:
 //    std::string name;
 //    void remove_promise(ResourcePromise *);
 //    void release(ResourcePromise* promise);
-    void get_back(unsigned long number);
 public:
+    void  get_back(unsigned long number) override;
     std::shared_ptr<ResourcePromise> seize_or_reserve(unsigned long source_number);
     Resources(std::string name, unsigned long sources);
 //    void setName(std::string new_name);

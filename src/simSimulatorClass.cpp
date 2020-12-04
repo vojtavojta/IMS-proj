@@ -20,8 +20,8 @@ Simulator::Simulator(double sTime, double eTime){
 }
 
 void Simulator::run(){
-    while (!PriorityQueue::eventQueue->is_empty()) {
-        QueueElement e = PriorityQueue::eventQueue->pop_event();
+    while (!EventPriorityQueue::eventQueue->is_empty()) {
+        QueueElement e = EventPriorityQueue::eventQueue->pop_event();
         if(e->time > this->end_time){
             break;
         }
