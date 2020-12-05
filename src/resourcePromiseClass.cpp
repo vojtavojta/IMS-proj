@@ -10,7 +10,8 @@
 
 
 ResourcePromise::ResourcePromise(unsigned long num_resources, std::shared_ptr<Facility> resources) {
-    this->resource_handler = std::shared_ptr<ResourceHandler>(new ResourceHandler(num_resources, resources));
+    auto handler = new ResourceHandler(num_resources, resources);
+    this->resource_handler = std::make_shared<ResourceHandler>(*handler);
     this->resources = resources;
     this->priority = 0;
 }

@@ -7,7 +7,8 @@
 
 #include "priorityQueue.hpp"
 
-std::shared_ptr<EventPriorityQueue> EventPriorityQueue::eventQueue = std::shared_ptr<EventPriorityQueue>(new EventPriorityQueue());
+auto __eventQueuePtr = new EventPriorityQueue();
+std::shared_ptr<EventPriorityQueue> EventPriorityQueue::eventQueue = std::make_shared<EventPriorityQueue>(*__eventQueuePtr);
 
 EventPriorityQueue::EventPriorityQueue(){
     this->events = std::vector<QueueElement>();
