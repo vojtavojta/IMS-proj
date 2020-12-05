@@ -42,7 +42,7 @@ void FacilityInfo::add_left(unsigned long number){
     this->left += number;
 }
 
-long long FacilityInfo::get_id(){
+long long FacilityInfo::get_fac_id(){
     return this->facility->get_id();
 }
 
@@ -65,7 +65,7 @@ void SimulationStatistics::add_resources(Facility* fac){
 
 long long SimulationStatistics::find_facility(unsigned long id){
     for (int i = 0; i < this->facilities.size(); i++) {
-        if (this->facilities[i].get_id() == id) {
+        if (this->facilities[i].get_fac_id() == id) {
             return i;
         }
     }
@@ -74,7 +74,7 @@ long long SimulationStatistics::find_facility(unsigned long id){
 
 long long SimulationStatistics::find_resource_facility(unsigned long id){
     for (int i = 0; i < this->resources.size(); i++) {
-        if (this->resources[i].get_id() == id) {
+        if (this->resources[i].get_fac_id() == id) {
             return i;
         }
     }
@@ -127,6 +127,7 @@ void SimulationStatistics::add_left(unsigned long id, bool is_facility, unsigned
 
 
 void  SimulationStatistics::print_out(){
+    *this->file_descriptor << "\nSimulation ended at simulation time: "<< current_time <<"\n";
     *this->file_descriptor << "\nInformation about simulation events seizing facilities and resources\n\n";
     *this->file_descriptor << "-----------------------------------------------------\n";
     *this->file_descriptor << "| FACILITIES: "<< this->facilities.size()<< "\n";

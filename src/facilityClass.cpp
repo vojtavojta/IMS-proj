@@ -134,12 +134,8 @@ void Facility::get_back(unsigned long number){
 }
 
 void Facility::remove_promise(ResourcePromise * promise){
-    remove_promise(promise, 0);
-}
-
-void Facility::remove_promise(ResourcePromise * promise, int priority){
     std::queue<std::shared_ptr<ResourcePromise>> new_queue{};
-    long index = this->get_index_to_queues(0);
+    long index = this->get_index_to_queues(promise->priority);
     if(index >= 0){
         while (!this->queues[index].promises.empty()) {
             std::shared_ptr<ResourcePromise> tmp = this->queues[index].promises.front();
@@ -151,6 +147,8 @@ void Facility::remove_promise(ResourcePromise * promise, int priority){
         this->queues[index].promises = new_queue;
     }
 }
+
+
 
 
 
@@ -208,6 +206,13 @@ void Resources::get_back(unsigned long number){
     }
 }
 
+bool Resources::busy(){
+    if (current_sources < capacity && queues.empty()){
+        return false;
+    } else {
+        return true;
+    }
+}
 
 ResourceHandler::ResourceHandler(unsigned long req_resources, std::shared_ptr<Facility> service_line){
     this->req_resources = req_resources;
@@ -216,8 +221,14 @@ ResourceHandler::ResourceHandler(unsigned long req_resources, std::shared_ptr<Fa
 }
 
 void ResourceHandler::release(unsigned long number){
-    this->service_line->get_back(number);
-    this->req_resources = 0;
+    if (this->current_resources >= number) {
+        this->service_line->get_back(number);
+        this->req_resources -= number;
+    } else {
+        this->service_line->get_back(current_resources);
+        this->req_resources -= current_resources;
+    }
+    
 }
 
 void ResourceHandler::release(){
@@ -225,20 +236,19 @@ void ResourceHandler::release(){
     this->req_resources = 0;
 }
 
-bool ResourceHandler::transfer_to(std::shared_ptr<ResourceHandler> next_handler, unsigned long number){
-    assert(this->service_line->get_id() == next_handler->service_line->get_id());
-    if (this->current_resources >= number){
-        this->current_resources -= number;
-        next_handler->receive_resources(number);
-        return true;
-    } else {
-        this->current_resources -= number;
-        if (current_resources < 0) {
-            next_handler->receive_resources(number - current_resources);
+int ResourceHandler::transfer_to(std::shared_ptr<ResourceHandler> next_handler, unsigned long number){
+    if(this->service_line->get_id() == next_handler->service_line->get_id()){
+        if (this->current_resources >= number){
+            this->current_resources -= number;
+            next_handler->receive_resources(number);
+            return TRANSFER_OK;
+        } else {
+            next_handler->receive_resources(current_resources);
             current_resources = 0;
+            return TRANSFER_NOT_ENOUGH;
         }
-        return false;
     }
+    return TRANSFER_WRONG_SERVICE;
 }
 
 void ResourceHandler::receive_resources(unsigned long number){
@@ -252,3 +262,4 @@ unsigned long ResourceHandler::my_resources(){
 unsigned long ResourceHandler::required_resources(){
     return this->req_resources;
 }
+

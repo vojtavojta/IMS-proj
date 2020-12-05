@@ -12,12 +12,19 @@
 #include "simulationStatistics.hpp"
 #include "simulationStatistics.hpp"
 
+/// Class for main simulation object which controlls flow of simulation.
 class Simulator: public std::enable_shared_from_this<Simulator> {
 private:
     double start_time;
     double end_time;
 public:
+    
+    /// Constructor of simulator.
+    /// @param start_time start time of simulation
+    /// @param end_time ending time of simulation
     Simulator(double start_time, double end_time);
+    
+    /// Starts simulation.
     void run();
 };
 

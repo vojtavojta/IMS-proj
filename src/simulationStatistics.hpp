@@ -15,28 +15,50 @@
 #include <iostream>
 #include <fstream>
 #include "StatisticsOutput.hpp"
+#include "currentSimTime.hpp"
 
-
-
+/// Forward declaration of facility.
 class Facility;
 
+/// Struct for saving some info about facility.
 struct FacilityInfo {
     Facility* facility;
     unsigned long seized;
     unsigned long released;
     unsigned long left;
 public:
+    
+    /// Constructor of facility info.
+    /// @param fac facility which is watched
     FacilityInfo(Facility* fac);
+    
+    /// Adds successful seizing of 1 resource.
     void add_seized();
+    
+    /// Adds successful seizing of certain number of resources.
+    /// @param number number of seized resources
     void add_seized(unsigned long number);
+    
+    /// Adds successful releasing of 1 resource.
     void add_released();
+    
+    /// Adds successful releasing of certain number of resources.
+    /// @param number number of released resources
     void add_released(unsigned long number);
+    
+    /// Adds 1 resource which couldn't be obtained.
     void add_left();
+    
+    /// Adds certain number resources which couldn't be obtained.
+    /// @param number number of resources
     void add_left(unsigned long number);
-    long long get_id();
+    
+    /// Gets id of facility
+    long long get_fac_id();
 };
 
 
+/// Class for saving statistics of all facility/resource objects.
 class SimulationStatistics: public Stat {
     double start_time;
     double end_time;
@@ -45,19 +67,52 @@ class SimulationStatistics: public Stat {
     long long find_facility(unsigned long id);
     long long find_resource_facility(unsigned long id);
 public:
-    SimulationStatistics();
-        
-    void add_facility(Facility*);
-    void remove_last_facility();
-    void add_resources(Facility* );
     
+    /// Constructor of simulation statistics.
+    SimulationStatistics();
+    
+    /// Adds facility.
+    /// @param fac facility to be added
+    void add_facility(Facility* fac);
+    
+    /// Removes last added facility.
+    void remove_last_facility();
+    
+    /// Adds resource.
+    /// @param fac resource to be added
+    void add_resources(Facility* fac);
+    
+    /// Prints out info.
     void print_out() override;
     
+    /// Adds successful seizing of 1 resource.
+    /// @param id of facility
+    /// @param is_facility if service is facility or resources
     void add_seized(unsigned long id, bool is_facility);
+    /// Adds successful seizing of certain number of resources.
+    /// @param id of facility
+    /// @param is_facility if service is facility or resources
+    /// @param number number of seized resources
     void add_seized(unsigned long id, bool is_facility, unsigned long number);
+    /// Adds successful releasing of 1 resource.
+    /// @param id of facility
+    /// @param is_facility if service is facility or resources
     void add_released(unsigned long id, bool is_facility);
+    /// Adds successful releasing of certain number of resources.
+    /// @param id of facility
+    /// @param is_facility if service is facility or resources
+    /// @param number number of released resources
     void add_released(unsigned long id, bool is_facility, unsigned long number);
+    
+    /// Adds 1 resource which couldn't be obtained.
+    /// @param id of facility
+    /// @param is_facility if service is facility or resources
     void add_left(unsigned long id, bool is_facility);
+    
+    /// Adds certain number resources which couldn't be obtained.
+    /// @param id of facility
+    /// @param is_facility if service is facility or resources
+    /// @param number number of resources
     void add_left(unsigned long id, bool is_facility, unsigned long number);
 };
 

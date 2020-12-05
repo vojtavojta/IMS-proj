@@ -64,12 +64,12 @@ bool EventPriorityQueue::delete_event(unsigned long id){
 }
 
 QueueElement EventPriorityQueue::pop_event(){
-    QueueElement tmp = this->top_event();
+    QueueElement tmp = this->front_event();
     this->events.pop_back();
     return tmp;
 }
 
-QueueElement EventPriorityQueue::top_event(){
+QueueElement EventPriorityQueue::front_event(){
     return this->events[this->events.size()-1];
 }
 
