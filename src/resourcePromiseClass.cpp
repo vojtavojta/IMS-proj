@@ -28,7 +28,7 @@ void ResourcePromise::satisfy() {
 }
 
 void ResourcePromise::on_success(std::shared_ptr<RREvent> event){
-    event->resource_handler = resource_handler;
+    event->resource_handler.push_back(resource_handler);
     if (satisfied) {
         if (fail_event != nullptr){
             fail_event->terminate();
@@ -39,7 +39,7 @@ void ResourcePromise::on_success(std::shared_ptr<RREvent> event){
     }
 }
 
-void ResourcePromise::on_success(std::function<void (std::shared_ptr<ResourceHandler>)> succ_handler){
+void ResourcePromise::on_success(std::function<void (std::vector<std::shared_ptr<ResourceHandler>>)> succ_handler){
     std::shared_ptr<RREvent> succ_event(new LambdaBasedRREvent(succ_handler));
     on_success(succ_event);
 }

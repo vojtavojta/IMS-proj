@@ -10,9 +10,11 @@
 #include <iostream>
 #include <cassert>
 
-
+/// Global variable for saving simulation details.
 SimulationStatistics* simulation_info = new SimulationStatistics();
 
+/// <#Description#>
+/// @param priority <#priority description#>
 PriorityQueuePromiseElement::PriorityQueuePromiseElement(int priority){
     this->priority = priority;
 }

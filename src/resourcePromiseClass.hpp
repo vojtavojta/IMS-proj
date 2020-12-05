@@ -28,8 +28,8 @@ public:
     
     void on_success(std::shared_ptr<RREvent> event);
     
-    void on_success(std::function<void (std::shared_ptr<ResourceHandler>)> succ_handler);
-    
+    void on_success(std::function<void (std::vector<std::shared_ptr<ResourceHandler>>)> succ_handler);
+
     void on_fail(double max_wait, std::function<void ()> fail_handler);
     
     void on_fail(double wait_until, std::shared_ptr<Event> timed_out_event);

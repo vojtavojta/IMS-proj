@@ -18,15 +18,20 @@
 #define HIGHER_PRIO -1
 #define LOWER_PRIO -2
  
+/// Global variable of simulation statistics.
 extern SimulationStatistics* simulation_info;
 
-
+/// Forward declaration of resource promise.
 class ResourcePromise;
 
 
+/// Element of pseudo priority queue.
 struct PriorityQueuePromiseElement {
     int priority;
     std::queue<std::shared_ptr<ResourcePromise>> promises {};
+    
+    /// <#Description#>
+    /// @param priority <#priority description#>
     PriorityQueuePromiseElement(int priority);
 };
 

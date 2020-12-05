@@ -41,9 +41,6 @@ void Event::terminate(){
 
 void Event::behaviour() {}
 
-unsigned long Event::get_id(){
-    return this->id;
-}
 
 
 LambdaBasedEvent::LambdaBasedEvent(std::function<void ()> event_behaviour): Event() {
@@ -58,8 +55,9 @@ void LambdaBasedEvent::behaviour() {
 
 RREvent::RREvent(): Event(){}
 
+void RREvent::behaviour() {}
 
-LambdaBasedRREvent::LambdaBasedRREvent(std::function<void (std::shared_ptr<ResourceHandler> r_handler)> event_behaviour): RREvent(){
+LambdaBasedRREvent::LambdaBasedRREvent(std::function<void (std::vector<std::shared_ptr<ResourceHandler>> r_handler)> event_behaviour): RREvent(){
     this->event_behaviour = event_behaviour;
 }
 
@@ -69,11 +67,13 @@ void LambdaBasedRREvent::behaviour(){
 
 void RREvent::terminate_with_release(){
     this->terminate();
-    this->resource_handler->release();
+    for (int i = 0; i < resource_handler.size(); i++) {
+        this->resource_handler[i]->release();
+    }
+    
 }
 
 void RREvent::terminate_with_release(std::function<void ()> lambda){
-    this->terminate();
-    this->resource_handler->release();
+    terminate_with_release();
     lambda();
 }
