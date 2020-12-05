@@ -150,14 +150,25 @@ class customer_generator: public Event{
         this->plan(current_time + (rand()%5)); //RAND
     }
 };
+/*
+class delivery_generator: public Event{
+    void behaviour() override{
+        std::cout << "delivery of goods\n";
 
+        this->plan(current_time + (rand()%30)); //RAND
+    }
+};
+*/
 int main(int argc, const char * argv[]) {
     std::cout << "start\n";
     auto sim = std::make_shared<Simulator>(0, 480);
     std::cout << "simulator created\n";
     auto a = std::make_shared<customer_generator>();
     a->plan();
-    std::cout << "customer_genterator prepared\n";
+    /*std::cout << "customer_genterator prepared\n";
+    auto d = std::make_shared<delivery_generator>();
+    d->plan(current_time + (rand()%30));*/
+    std::cout << "delivery_genterator prepared\n";
     sim->run();
     simulation_info->print_out();
     //generated_numbers_statistics->print_out();
