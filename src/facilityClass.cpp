@@ -223,16 +223,17 @@ ResourceHandler::ResourceHandler(unsigned long req_resources, std::shared_ptr<Fa
 void ResourceHandler::release(unsigned long number){
     if (this->current_resources >= number) {
         this->service_line->get_back(number);
-        this->req_resources -= number;
+        this->current_resources -= number;
     } else {
         this->service_line->get_back(current_resources);
-        this->req_resources -= current_resources;
+        this->current_resources = 0;
     }
     
 }
 
 void ResourceHandler::release(){
     this->service_line->get_back(this->current_resources);
+    this->current_resources = 0;
     this->req_resources = 0;
 }
 
