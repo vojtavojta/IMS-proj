@@ -9,18 +9,16 @@
 #define priorityQueue_hpp
 
 #include <vector>
- 
-class Event;
+#include "eventClass.hpp"
 
 typedef std::shared_ptr<Event> QueueElement;
-
 
 /// Class for priority queue.
 class EventPriorityQueue {
 private:
     std::vector<QueueElement> events;
 public:
-    static std::shared_ptr<EventPriorityQueue> eventiqQueue;
+    static std::shared_ptr<EventPriorityQueue> eventQueue;
     
     /// Constructor of priority queue
     EventPriorityQueue();
@@ -40,8 +38,6 @@ public:
     
     /// Checks if queue is empty.
     bool is_empty();
-    
-    ~EventPriorityQueue();
 };
 
 
