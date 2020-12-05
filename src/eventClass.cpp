@@ -20,7 +20,6 @@ void Event::plan(double t){
     if (t >= current_time) {
         this->time = t;
         auto tmp = shared_from_this();
-        tmp->time = t;
         EventPriorityQueue::eventQueue->insert_event(tmp);
     }
 }
@@ -28,7 +27,6 @@ void Event::plan(double t){
 void Event::plan(){
     this->time = current_time;
     auto tmp = shared_from_this();
-    tmp->time = current_time;
     EventPriorityQueue::eventQueue->insert_event(tmp);
 }
 
