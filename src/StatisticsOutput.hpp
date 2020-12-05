@@ -11,12 +11,14 @@
 #include <iostream>
 #include <fstream>
 
+/// Class for output file error.
 class Error: public std::exception{
     virtual const char* what() const throw(){
         return "Can't open output file\n";
     }
 };
 
+/// Class for stats.
 class Stat{
 public:
     std::ostream* file_descriptor;

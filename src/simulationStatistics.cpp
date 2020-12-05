@@ -140,7 +140,7 @@ void  SimulationStatistics::print_out(){
         *this->file_descriptor << "| Timed out: " << this->facilities[i].left << " \n";
         *this->file_descriptor << "|====================================================\n";
     }
-    *this->file_descriptor << "\n=====================================================\n";
+    *this->file_descriptor << "\n----------------------------------------------------\n";
     *this->file_descriptor << "| Resources: "<< this->resources.size()<<"\n";
     *this->file_descriptor << "|====================================================\n";
     for (int i = 0; i < this->resources.size(); i++) {
