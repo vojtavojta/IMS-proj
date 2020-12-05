@@ -20,7 +20,6 @@ auto delicatessen = std::make_shared<Resources>("delicatessen", 2);
 class leaving: public RREvent {
     void behaviour() override {
         for (int i = 0; i < this->resource_handler.size(); i++) {
-            //this->resource_handler[i]->release();
            if (this->resource_handler[i]->service_line->name != "delicatessen") {
                   this->resource_handler[i]->release();
                 }
@@ -35,7 +34,7 @@ class payment: public RREvent {
         std::cout << "customer payment " << this->get_id() << "\n" ;
         auto l = std::make_shared<leaving>();
         l->resource_handler = this->resource_handler;
-        l->plan(current_time + 7); //RAND
+        l->plan(current_time + Exp_Random(7)); 
     };
 };
 
@@ -46,11 +45,6 @@ class goods_selected: public RREvent {
         auto d = this->resource_handler;
         auto l = [d](){
             std::cout << "ERROR customer cant leave without paying\n";
-            /*for (int i = 0; i < d.size(); i++) {
-                if (d[i]->service_line->name == "shoppingTrolley") {
-                    d[i]->release();
-                }
-            }*/
         };
         a->on_fail(120000, l);
         auto p = std::make_shared<leaving>();
@@ -66,7 +60,7 @@ class shoping: public RREvent {
         std::cout << "customer is shoping" << this->get_id() << "\n" ;
         auto goods = std::make_shared<goods_selected>();
         goods->resource_handler = this->resource_handler;
-        goods->plan(current_time + 15);//RAND
+        goods->plan(current_time + Exp_Random(15));
     };
 };
 
@@ -80,7 +74,7 @@ class delicatessen_end: public RREvent {
             }
         auto goods = std::make_shared<shoping>();
         goods->resource_handler = this->resource_handler;
-        goods->plan(current_time + 4);//RAND
+        goods->plan(current_time + Exp_Random(4));
     };
 };
 
@@ -89,7 +83,7 @@ class delicatessen_shoping: public RREvent {
         std::cout << "customer is shopingin delicatessen" << this->get_id() << "\n" ;
         auto goods = std::make_shared<delicatessen_end>();
         goods->resource_handler = this->resource_handler;
-        goods->plan(current_time + 4);//RAND
+        goods->plan(current_time + Exp_Random(4));
     };
 };
 
@@ -100,11 +94,6 @@ class delicatessen_queue: public RREvent {
         auto d = this->resource_handler;
         auto l = [d](){
             std::cout << "ERROR customer cant leave without paying\n";
-            /*for (int i = 0; i < d.size(); i++) {
-                if (d[i]->service_line->name == "shoppingTrolley") {
-                    d[i]->release();
-                }
-            }*/
         };
         a->on_fail(120000, l);
         auto p = std::make_shared<delicatessen_shoping>();
@@ -147,27 +136,63 @@ class customer_generator: public Event{
     void behaviour() override{
         auto a = std::make_shared<take_trolley>();
         a->plan();
-        this->plan(current_time + (rand()%5)); //RAND
+        this->plan(current_time + (Exp_Random(5))); 
     }
 };
-/*
+
+
+class delivery_end: public RREvent {
+    void behaviour() override {
+        std::cout << "delivery is ending delicatessen" << this->get_id() << "\n" ;
+        for (int i = 0; i < this->resource_handler.size(); i++) {
+                if (this->resource_handler[i]->service_line->name == "delicatessen") {
+                    this->resource_handler[i]->release();
+                }
+            }
+    };
+};
+
+class delivery_working: public RREvent {
+    void behaviour() override {
+        std::cout << "delivery working" << this->get_id() << "\n" ;
+        auto d = std::make_shared<delivery_end>();
+        d->resource_handler = this->resource_handler;
+        d->plan(current_time + Exp_Random(15));
+    };
+};
+
+
+class delivery_in_delicatessen:public Event{
+    void behaviour() override {
+            std::cout << "delivery in delicatessen" << this->get_id() << "\n";
+            auto a = delicatessen->seize_or_reserve(1,1);
+            auto w = std::make_shared<delivery_working>();
+            auto l = [](){
+                std::cout << "can't delivery\n";
+            };
+            a->on_fail(30, l);
+            a->on_success(w);
+    }
+};
+
 class delivery_generator: public Event{
     void behaviour() override{
         std::cout << "delivery of goods\n";
-
-        this->plan(current_time + (rand()%30)); //RAND
+        auto a = std::make_shared<delivery_in_delicatessen>();
+        a->plan();
+        this->plan(current_time + (Norm_Random(30,1))); 
     }
 };
-*/
+
 int main(int argc, const char * argv[]) {
     std::cout << "start\n";
     auto sim = std::make_shared<Simulator>(0, 480);
     std::cout << "simulator created\n";
     auto a = std::make_shared<customer_generator>();
     a->plan();
-    /*std::cout << "customer_genterator prepared\n";
+    std::cout << "customer_genterator prepared\n";
     auto d = std::make_shared<delivery_generator>();
-    d->plan(current_time + (rand()%30));*/
+    d->plan(current_time + (Norm_Random(30,1)));
     std::cout << "delivery_genterator prepared\n";
     sim->run();
     simulation_info->print_out();
