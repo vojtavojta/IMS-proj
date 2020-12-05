@@ -42,10 +42,17 @@ struct GeneratedNumberInfo {
 /// Class for saving info about all generated values
 class GeneratedNumberStatistics: public Stat{
 public:
-    GeneratedNumberStatistics();
     std::vector<GeneratedNumberInfo> generated_numbers_info{};
+    
+    /// Constructor of generated number statistics.
+    GeneratedNumberStatistics();
+    
+    /// Prints out all info.
     void print_out() override;
     
+    /// Adds new generated value to information structure.
+    /// @param type of function which generated value
+    /// @param value generated value
     void add_value(unsigned short type, double value);
     
 };

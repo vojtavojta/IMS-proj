@@ -132,7 +132,7 @@ void  SimulationStatistics::print_out(){
     *this->file_descriptor << "-----------------------------------------------------\n";
     *this->file_descriptor << "| FACILITIES: "<< this->facilities.size()<< "\n";
     *this->file_descriptor << "|====================================================\n";
-    for (int i = 0; i < this->resources.size(); i++) {
+    for (int i = 0; i < this->facilities.size(); i++) {
         *this->file_descriptor << "| ID: " << this->facilities[i].facility->get_id() << " \n";
         *this->file_descriptor << "| Name: " << this->facilities[i].facility->name << " \n";
         *this->file_descriptor << "| Seized: " << this->facilities[i].seized << " \n";

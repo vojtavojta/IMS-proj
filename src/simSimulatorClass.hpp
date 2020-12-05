@@ -10,7 +10,10 @@
 
 #include "priorityQueue.hpp"
 #include "simulationStatistics.hpp"
-#include "simulationStatistics.hpp"
+#include "generatedNumbersStatistics.hpp"
+#include "currentSimTime.hpp"
+#include "commonSimulationQueue.hpp"
+
 
 /// Class for main simulation object which controlls flow of simulation.
 class Simulator: public std::enable_shared_from_this<Simulator> {

@@ -6,7 +6,7 @@
 //
 
 #include "simSimulatorClass.hpp"
-#include "currentSimTime.hpp"
+#include "eventClass.hpp"
 
 double _g_curentTime = 0;
 const double & current_time = _g_curentTime;
@@ -20,8 +20,8 @@ Simulator::Simulator(double sTime, double eTime){
 }
 
 void Simulator::run(){
-    while (!EventPriorityQueue::eventQueue->is_empty()) {
-        QueueElement e = EventPriorityQueue::eventQueue->pop_event();
+    while (!eventQueue->is_empty()) {
+        auto e = eventQueue->pop_event();
         if(e->time > this->end_time){
             break;
         }
