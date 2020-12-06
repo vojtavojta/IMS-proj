@@ -169,7 +169,7 @@ void  SimulationStatistics::print_out(){
         *this->file_descriptor << "| Seized: " << this->facilities[i].seized << " \n";
         *this->file_descriptor << "| Released: " << this->facilities[i].released << " \n";
         *this->file_descriptor << "| Timed out: " << this->facilities[i].left << " \n";
-        *this->file_descriptor << "| Average waiting time: " << this->facilities[i].avg_wait_time() << " \n";
+        *this->file_descriptor << "| Average successful waiting time: " << this->facilities[i].avg_wait_time() << " \n";
         *this->file_descriptor << "|====================================================\n";
     }
     *this->file_descriptor << "\n----------------------------------------------------\n";
@@ -181,7 +181,7 @@ void  SimulationStatistics::print_out(){
         *this->file_descriptor << "| Seized: " << this->resources[i].seized << " \n";
         *this->file_descriptor << "| Released: " << this->resources[i].released << " \n";
         *this->file_descriptor << "| Timed out: " << this->resources[i].left << " \n";
-        *this->file_descriptor << "| Average waiting time: " << this->resources[i].avg_wait_time() << " \n";
+        *this->file_descriptor << "| Average successful waiting time: " << this->resources[i].avg_wait_time() << " \n";
         *this->file_descriptor << "=====================================================\n";
     }
     
