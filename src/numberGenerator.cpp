@@ -44,7 +44,6 @@ double Norm_Random(double m, double s) {
         y = Y_For_Norm_Distribution(m, s);
     } while (y > Norm_Distribution_Function(x,m,s));
     GeneratedNumberStatistics::shared.add_value(NORM, x);
-
     return x;
 }
 
