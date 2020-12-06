@@ -15,6 +15,9 @@ EventPriorityQueue::EventPriorityQueue(){
 }
 
 void EventPriorityQueue::insert_event(QueueElement event){
+    if (event->time < current_time){
+        return;
+    }
     if (events.size() == 0) {
         events.push_back(event);
     } else {
