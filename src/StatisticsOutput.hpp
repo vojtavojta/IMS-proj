@@ -22,8 +22,15 @@ class Error: public std::exception{
 class Stat{
 public:
     std::ostream* file_descriptor;
+    
+    /// Constructor of satatistics class
     Stat();
+    
+    /// Should print out statistics.
     virtual void print_out();
+    
+    /// Sets output to file with path in parameter file_name.
+    /// @param file_name path to file
     void set_output_file(std::string file_name);
 };
 
