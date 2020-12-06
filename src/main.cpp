@@ -191,6 +191,6 @@ int main(int argc, const char * argv[]) {
     d->plan(current_time + (Norm_Random(30,1)));
     sim->run();
     simulation_info->print_out();
-    //generated_numbers_statistics->print_out();
+    generated_numbers_statistics->print_out();
     return 0;
 }
