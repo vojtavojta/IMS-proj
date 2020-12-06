@@ -47,7 +47,7 @@ void ResourcePromise::on_success(std::function<void (std::vector<std::shared_ptr
 }
 
 void ResourcePromise::on_fail(double max_wait, std::function<void ()> fail_handler) {
-    std::shared_ptr<Event> fail_event(new LambdaBasedEvent(fail_handler));
+    std::shared_ptr<Event> event = std::make_shared<LambdaBasedEvent>(fail_handler);
     on_fail(max_wait, fail_event);
 }
 

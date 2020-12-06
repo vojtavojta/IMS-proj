@@ -13,8 +13,6 @@
 /// Global variable for saving simulation details.
 SimulationStatistics* simulation_info = new SimulationStatistics();
 
-/// <#Description#>
-/// @param priority <#priority description#>
 PriorityQueuePromiseElement::PriorityQueuePromiseElement(int priority){
     this->priority = priority;
 }
@@ -40,7 +38,7 @@ unsigned long Facility::queue_len(){
 }
 
 unsigned long Facility::queue_len(int priority){
-    for (int i = 0; i < this->queues.size(); i++) {
+    for (size_t i = 0; i < this->queues.size(); i++) {
         if (this->queues[i].priority == priority) {
             return queues[i].promises.size();
         }
@@ -49,7 +47,7 @@ unsigned long Facility::queue_len(int priority){
 }
 
 long Facility::get_index_to_queues(int priority){
-    for (int i = 0; i < this->queues.size(); i++) {
+    for (size_t i = 0; i < this->queues.size(); i++) {
         if (this->queues[i].priority == priority) {
             return i;
         }
@@ -67,8 +65,8 @@ std::shared_ptr<ResourcePromise> Facility::seize_or_reserve(){
     return this->seize_or_reserve(0);
 }
 
-void Facility::insert_promise(std::shared_ptr<ResourcePromise> promise){
-    for (int i = 0; i < this->queues.size(); i++) {
+void Facility::insert_promise(std::shared_ptr<ResourcePromise> promise) {
+    for (size_t i = 0; i < this->queues.size(); i++) {
         if (this->queues[i].priority == promise->priority) {
             this->queues[i].promises.push(promise);
             return;
@@ -85,7 +83,7 @@ void Facility::insert_promise(std::shared_ptr<ResourcePromise> promise){
 
 std::shared_ptr<ResourcePromise> Facility::seize_or_reserve(int priority){
     auto ptr_this = shared_from_this();
-    auto promise = std::make_shared<ResourcePromise>(1, ptr_this);
+    auto promise = std::make_shared<ResourcePromise>(1, ptr_this, priority);
     long index = get_index_to_queues(0);
     if (!seized) {
         if(index == HIGHER_PRIO){
@@ -103,7 +101,7 @@ std::shared_ptr<ResourcePromise> Facility::seize_or_reserve(int priority){
 }
 
 bool Facility::is_queues_empty(){
-    for (int i = 0; i < queues.size(); i++) {
+    for (unsigned long i = 0; i < queues.size(); i++) {
         if (!this->queues[i].promises.empty()) {
             return false;
         }

@@ -16,6 +16,7 @@
 
 #include "simSimLib.hpp"
 
+#include "numberGenerator.hpp"
 
 
 auto cashDesk = std::make_shared<Facility>("Cash_desk");
@@ -191,6 +192,6 @@ int main(int argc, const char * argv[]) {
     d->plan(current_time + (Norm_Random(30,1)));
     sim->run();
     simulation_info->print_out();
-    generated_numbers_statistics->print_out();
+    GeneratedNumberStatistics::shared.print_out();
     return 0;
 }

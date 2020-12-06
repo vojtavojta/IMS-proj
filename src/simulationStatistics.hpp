@@ -54,18 +54,16 @@ public:
     void add_left(unsigned long number);
     
     /// Gets id of facility
-    long long get_fac_id();
+    unsigned long long get_fac_id();
 };
 
 
 /// Class for saving statistics of all facility/resource objects.
 class SimulationStatistics: public Stat {
-    double start_time;
-    double end_time;
     std::vector<FacilityInfo> facilities{};
     std::vector<FacilityInfo> resources{};
-    long long find_facility(unsigned long id);
-    long long find_resource_facility(unsigned long id);
+    long long find_facility(unsigned long long id);
+    long long find_resource_facility(unsigned long long id);
 public:
     
     /// Constructor of simulation statistics.

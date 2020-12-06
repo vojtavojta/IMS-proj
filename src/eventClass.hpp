@@ -51,6 +51,10 @@ public:
     /// Deletes another event from main queue.
     /// @param ident identifier of event
     void terminate(unsigned long ident);
+    
+    virtual ~Event() {
+        
+    }
 };
 
 
@@ -64,6 +68,10 @@ public:
     
     /// Behaviour of event.
     void behaviour() override;
+    
+//    virtual ~LambdaBasedEvent() {
+//        
+//    }
 };
 
 
@@ -84,6 +92,10 @@ public:
     
     /// Behaviour of event.
     void behaviour() override;
+    
+//    virtual ~RREvent() {
+//
+//    }
 };
 
 /// Event defined by lambda function with resource.
@@ -96,6 +108,10 @@ public:
     
     /// Behaviour of event.
     void behaviour() override;
+//
+//    virtual ~LambdaBasedRREvent() {
+//
+//    }
 };
 
 #endif /* eventClass_hpp */

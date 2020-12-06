@@ -41,11 +41,12 @@ struct GeneratedNumberInfo {
 
 /// Class for saving info about all generated values
 class GeneratedNumberStatistics: public Stat{
+    /// Constructor of generated number statistics.
+    GeneratedNumberStatistics();
 public:
     std::vector<GeneratedNumberInfo> generated_numbers_info{};
     
-    /// Constructor of generated number statistics.
-    GeneratedNumberStatistics();
+    static GeneratedNumberStatistics shared;
     
     /// Prints out all info.
     void print_out() override;

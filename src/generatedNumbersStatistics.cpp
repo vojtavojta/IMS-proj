@@ -9,9 +9,6 @@
 #include <cmath>
 
 
-
-    
-
 GeneratedNumberInfo::GeneratedNumberInfo(std::string name){
     this->name = name;
     generated = 0;
@@ -31,6 +28,7 @@ double GeneratedNumberInfo::standard_deviation(){
     return sqrt((pow(sum, 2) - generated*pow(this->avg_val(), 2))/(generated - 1));
 }
 
+GeneratedNumberStatistics GeneratedNumberStatistics::shared = GeneratedNumberStatistics();
 
 GeneratedNumberStatistics::GeneratedNumberStatistics(){
     this->generated_numbers_info.push_back(GeneratedNumberInfo("Random"));
@@ -52,7 +50,7 @@ void GeneratedNumberStatistics::add_value(unsigned short type, double value){
 
 void GeneratedNumberStatistics::print_out() {
     *this->file_descriptor << "\nGeneral information about all generated values\n\n";
-    for (int i = 0; i < generated_numbers_info.size(); i++) {
+    for (unsigned long i = 0; i < generated_numbers_info.size(); i++) {
         if (generated_numbers_info[i].generated != 0) {
             *this->file_descriptor << "-----------------------------------------------------\n";
             switch (i) {

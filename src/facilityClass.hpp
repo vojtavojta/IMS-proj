@@ -88,6 +88,10 @@ public:
     
     /// Checks if facility is seized.
     virtual bool busy();
+    
+    virtual ~Facility() {
+        
+    }
 };
 
 /// Class of resources (Store).

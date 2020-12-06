@@ -5,13 +5,10 @@
 #include <cmath>
 #include "numberGenerator.hpp"
 
-GeneratedNumberStatistics* generated_numbers_statistics = new GeneratedNumberStatistics();
-
-
 double Random(void) {
     ix = ix * 69069L + 1; // implicit modulo
     double tmp = ix / ((double)ULONG_MAX + 1);
-    generated_numbers_statistics->add_value(RANDOM, tmp);
+    GeneratedNumberStatistics::shared.add_value(RANDOM, tmp);
     return tmp;
 }
 
@@ -23,7 +20,7 @@ double __Random(void){
 
 double Exp_Random(double lambda) {
     double result = -1 * ((log(1-__Random()))/lambda);
-    generated_numbers_statistics->add_value(EXP, result);
+    GeneratedNumberStatistics::shared.add_value(EXP, result);
     return result;
 }
 
@@ -34,13 +31,13 @@ double Norm_Random(double m, double s) {
         x = X_For_Norm_Distribution(m,s);
         y = Y_For_Norm_Distribution(m, s);
     } while (y > Norm_Distribution_Function(x,m,s));
-    generated_numbers_statistics->add_value(NORM, x);
+    GeneratedNumberStatistics::shared.add_value(NORM, x);
     return x;
 }
 
 double Uniform_Random(double min, double max) {
     double tmp = (min + (__Random() * (max - min)));
-    generated_numbers_statistics->add_value(UNIFORM, tmp);
+    GeneratedNumberStatistics::shared.add_value(UNIFORM, tmp);
     return tmp;
 }
 
@@ -91,7 +88,6 @@ void Test_Random(int number_of_iterations) {
 
 
 void Test_Exp_Random(int number_of_iterations, double lambda) {
-    int n_0 = 0, n_1 = 0, n_2 = 0, n_3 = 0;
     double sum = 0;
     for (int i = 0; i < number_of_iterations; i++) {
         sum += Exp_Random(lambda);

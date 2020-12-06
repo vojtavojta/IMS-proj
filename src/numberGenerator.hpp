@@ -9,9 +9,6 @@
 #define numberGenerator_hpp
 #include "generatedNumbersStatistics.hpp"
 
-extern GeneratedNumberStatistics* generated_numbers_statistics;
-
-
 static unsigned long ix = 2; // seed
 static double SIGMA_MULTIPLE = 100;// determines accuracy of Norm_Random
 

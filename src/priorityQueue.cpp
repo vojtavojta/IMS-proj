@@ -25,14 +25,14 @@ void EventPriorityQueue::insert_event(QueueElement event){
                     if (events[i]->priority > event->priority) {
                         events.insert(events.begin() + i, event);
                     } else {
-                        if (i == events.size()-1) {
+                        if (i == (long long) events.size()-1) {
                             events.push_back(event);
                         } else {
                             events.insert(events.begin() + i + 1, event);
                         }
                     }
                 } else {
-                    if (i == events.size()-1) {
+                    if (i == (long long) events.size()-1) {
                         events.push_back(event);
                     } else {
                         events.insert(events.begin() + i + 1, event);
@@ -44,13 +44,12 @@ void EventPriorityQueue::insert_event(QueueElement event){
         if (i == -1) {
             events.insert(events.begin() + i + 1, event);
         }
-        
     }
 }
 
 bool EventPriorityQueue::delete_event(unsigned long id){
-    int index = -1;
-    for (int i = 0; i < events.size(); i++) {
+    long long index = -1;
+    for (int i = 0; i < (long long) events.size(); i++) {
         if (events[i]->get_id() == id) {
             index = i;
             break;

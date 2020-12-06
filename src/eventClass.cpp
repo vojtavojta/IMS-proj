@@ -65,7 +65,7 @@ void LambdaBasedRREvent::behaviour(){
 
 void RREvent::terminate_with_release(){
     this->terminate();
-    for (int i = 0; i < resource_handler.size(); i++) {
+    for (unsigned long i = 0; i < resource_handler.size(); i++) {
         this->resource_handler[i]->release();
     }
     
