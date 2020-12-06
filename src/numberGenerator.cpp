@@ -5,17 +5,17 @@
 #include <cmath>
 #include "numberGenerator.hpp"
 
-
+//congruential generator
 double Random(void) {
     ix = ix * 69069L + 1; // implicit modulo
     return ix / ((double)ULONG_MAX + 1);
 }
-
+//generator exponential distribution
 double Exp_Random(double lambda) {
     double result = -1 * lambda * log(Random());
     return result;
 }
-
+//generator gaussian distribution - using exclusion method
 double Norm_Random(double m, double s) {
     double x, y;
     do
@@ -25,12 +25,12 @@ double Norm_Random(double m, double s) {
     } while (y > Norm_Distribution_Function(x,m,s));
     return x;
 }
-
+//generator uniform distribution
 double Uniform_Random(double min, double max) {
     return (min + (Random() * (max - min)));
 }
-
-double Norm_Distribution_Function(double x, double m, double s)//only norm form generating < y8vzslost na x misto kteryho mam tedka jen rand
+//function of normal distribution used in Norm_Random
+double Norm_Distribution_Function(double x, double m, double s)
 {
     static const double sqrt_2pi = 2.506628275;
     double a = (x - m) / s;
@@ -38,19 +38,19 @@ double Norm_Distribution_Function(double x, double m, double s)//only norm form 
 
     return b / s * exp(-0.5f * a * a);
 }
-
+//auxiliary function for Norm_Random - return random number in correcct range
 double Y_For_Norm_Distribution(double m, double s) {
    double max = Norm_Distribution_Function(m, m, s);
    return Random() * max;
 }
-
+//auxiliary function for Norm_Random - return random number in correcct range
 double X_For_Norm_Distribution(double m, double s) {
     double max = m + (SIGMA_MULTIPLE * s);
     double min = m - (SIGMA_MULTIPLE * s);
     return (min + (Random() * (max - min)));
 
 }
-
+//Test for Random
 void Test_Random(int number_of_iterations) {
     int n_0 = 0, n_1 = 0, n_2 = 0, n_3 = 0;
     double j;
@@ -75,7 +75,7 @@ void Test_Random(int number_of_iterations) {
 
 }
 
-
+//Test for Exp_Random
 void Test_Exp_Random(int number_of_iterations, double lambda) {
     int n_0 = 0, n_1 = 0, n_2 = 0, n_3 = 0;
     double sum = 0;
@@ -83,13 +83,13 @@ void Test_Exp_Random(int number_of_iterations, double lambda) {
         sum += Exp_Random(lambda);
 
     }
-    double avg = number_of_iterations / sum;
+    double avg = sum / number_of_iterations ;
     std::cout << "\n\nExponential test: \n-----------------------\n";
     std::cout << "average:" << avg << ", with lambda = " << lambda << ", number of iterations = " << number_of_iterations;
 
 
 }
-
+//Test for Norm_Random
 void Test_Norm_Random(int number_of_iterations) {
     double j = 0;
     int coun[20];
@@ -111,7 +111,7 @@ void Test_Norm_Random(int number_of_iterations) {
         std::cout << "\n>" << coun[c];
     }
 }
-
+//Test for Uniform_Random
 void Test_Uniform_Random(int number_of_iterations) {
     double j = 0;
     int coun[20];
