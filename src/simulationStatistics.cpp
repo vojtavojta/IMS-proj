@@ -161,7 +161,7 @@ void  SimulationStatistics::print_out(){
     *this->file_descriptor << "\nSimulation ended at simulation time: "<< current_time <<"\n";
     *this->file_descriptor << "\nInformation about simulation events seizing facilities and resources\n\n";
     *this->file_descriptor << "-----------------------------------------------------\n";
-    *this->file_descriptor << "| FACILITIES: "<< this->facilities.size()<< "\n";
+    *this->file_descriptor << "| Facilities: "<< this->facilities.size()<< "\n";
     *this->file_descriptor << "|====================================================\n";
     for (unsigned long i = 0; i < this->facilities.size(); i++) {
         *this->file_descriptor << "| ID: " << this->facilities[i].facility->get_id() << " \n";

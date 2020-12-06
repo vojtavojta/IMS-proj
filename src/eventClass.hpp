@@ -14,7 +14,7 @@
 #include <algorithm>
 #include "identifiable.hpp"
 #include "facilityClass.hpp"
-
+#include <functional>
 
 class EventPriorityQueue;
 

@@ -116,6 +116,9 @@ std::shared_ptr<ResourcePromise> Facility::get_promise_from_queue(){
 
 void Facility::pop_promise_from_queue(){
     this->queues[this->queues.size()-1].promises.pop();
+    if (this->queues[this->queues.size()-1].promises.empty()) {
+        this->queues.pop_back();
+    }
 }
 
 
