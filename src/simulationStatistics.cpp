@@ -16,6 +16,7 @@ FacilityInfo::FacilityInfo(Facility* fac){
     seized = 0;
     left = 0;
     released = 0;
+    wait_time = 0;
 }
 
 void FacilityInfo::add_seized(){
@@ -44,6 +45,17 @@ void FacilityInfo::add_left(unsigned long number){
 
 unsigned long long FacilityInfo::get_fac_id(){
     return this->facility->get_id();
+}
+
+void FacilityInfo::add_wait_time(double time){
+    this->wait_time += time;
+}
+
+double FacilityInfo::avg_wait_time(){
+    if ((this->seized) == 0) {
+        return 0;
+    }
+    return this->wait_time/(this->seized);
 }
 
 SimulationStatistics::SimulationStatistics(){}
@@ -125,6 +137,25 @@ void SimulationStatistics::add_left(unsigned long id, bool is_facility, unsigned
     }
 }
 
+void SimulationStatistics::add_wait_time(unsigned long id, bool is_facility, double time){
+    if (is_facility) {
+        long long index = find_facility(id);
+        this->facilities[index].add_wait_time(time);
+    } else {
+        long long index = find_resource_facility(id);
+        this->resources[index].add_wait_time(time);
+    }
+}
+
+double SimulationStatistics::avg_wait_time(unsigned long id, bool is_facility){
+    if (is_facility) {
+        long long index = find_facility(id);
+        return this->facilities[index].avg_wait_time();
+    } else {
+        long long index = find_resource_facility(id);
+        return this->resources[index].avg_wait_time();
+    }
+}
 
 void  SimulationStatistics::print_out(){
     *this->file_descriptor << "\nSimulation ended at simulation time: "<< current_time <<"\n";
@@ -138,6 +169,7 @@ void  SimulationStatistics::print_out(){
         *this->file_descriptor << "| Seized: " << this->facilities[i].seized << " \n";
         *this->file_descriptor << "| Released: " << this->facilities[i].released << " \n";
         *this->file_descriptor << "| Timed out: " << this->facilities[i].left << " \n";
+        *this->file_descriptor << "| Average waiting time: " << this->facilities[i].avg_wait_time() << " \n";
         *this->file_descriptor << "|====================================================\n";
     }
     *this->file_descriptor << "\n----------------------------------------------------\n";
@@ -149,6 +181,7 @@ void  SimulationStatistics::print_out(){
         *this->file_descriptor << "| Seized: " << this->resources[i].seized << " \n";
         *this->file_descriptor << "| Released: " << this->resources[i].released << " \n";
         *this->file_descriptor << "| Timed out: " << this->resources[i].left << " \n";
+        *this->file_descriptor << "| Average waiting time: " << this->resources[i].avg_wait_time() << " \n";
         *this->file_descriptor << "=====================================================\n";
     }
     

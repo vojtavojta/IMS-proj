@@ -26,6 +26,7 @@ struct FacilityInfo {
     unsigned long seized;
     unsigned long released;
     unsigned long left;
+    double wait_time;
 public:
     
     /// Constructor of facility info.
@@ -53,8 +54,15 @@ public:
     /// @param number number of resources
     void add_left(unsigned long number);
     
-    /// Gets id of facility
+    /// Adds waiting time.
+    /// @param time waiting time
+    void add_wait_time(double time);
+    
+    /// Gets id of facility.
     unsigned long long get_fac_id();
+    
+    /// Computes avarage waiting time.
+    double avg_wait_time();
 };
 
 
@@ -112,6 +120,17 @@ public:
     /// @param is_facility if service is facility or resources
     /// @param number number of resources
     void add_left(unsigned long id, bool is_facility, unsigned long number);
+    
+    /// Adds waiting time.
+    /// @param time waiting time
+    /// @param id of facility
+    /// @param is_facility if service is facility or resources
+    void add_wait_time(unsigned long id, bool is_facility,double time);
+    
+    /// Computes avarage waiting time.
+    /// @param id of facility
+    /// @param is_facility if service is facility or resources
+    double avg_wait_time(unsigned long id, bool is_facility);
 };
 
 

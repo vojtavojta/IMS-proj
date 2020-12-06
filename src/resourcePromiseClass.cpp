@@ -9,18 +9,20 @@
 #include "facilityClass.hpp"
 
 
-ResourcePromise::ResourcePromise(unsigned long num_resources, std::shared_ptr<Facility> resources) {
+ResourcePromise::ResourcePromise(unsigned long num_resources, std::shared_ptr<Facility> resources, double time) {
     auto handler = new ResourceHandler(num_resources, resources);
     this->resource_handler = std::make_shared<ResourceHandler>(*handler);
     this->resources = resources;
     this->priority = 0;
+    this->time = time;
 }
 
-ResourcePromise::ResourcePromise(unsigned long num_resources, std::shared_ptr<Facility> resources, int priority) {
+ResourcePromise::ResourcePromise(unsigned long num_resources, std::shared_ptr<Facility> resources, double time, int priority) {
     auto handler = new ResourceHandler(num_resources, resources);
     this->resource_handler = std::make_shared<ResourceHandler>(*handler);
     this->resources = resources;
     this->priority = priority;
+    this->time = time;
 }
 
 void ResourcePromise::satisfy() {

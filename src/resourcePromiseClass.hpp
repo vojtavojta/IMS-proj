@@ -24,6 +24,7 @@ class ResourcePromise: public Identifiable, public std::enable_shared_from_this<
     std::shared_ptr<RREvent> success_event{};
     std::shared_ptr<Event> fail_event;
 public:
+    double time;
     std::shared_ptr<ResourceHandler> resource_handler{};
     int priority;
     bool satisfied = false;
@@ -31,13 +32,13 @@ public:
     /// Constructor of resource promise with default priority(0) in seizing.
     /// @param num_resources number of resources to be seized
     /// @param resources facility/resources owning resources to seized (to be seized)
-    ResourcePromise(unsigned long num_resources, std::shared_ptr<Facility> resources);
+    ResourcePromise(unsigned long num_resources, std::shared_ptr<Facility> resources, double time);
     
     /// Constructor of resource promise with certain priority in seizing.
     /// @param num_resources number of resources to be seized
     /// @param resources facility/resources owning resources to seized (to be seized)
     /// @param priority of seizing
-    ResourcePromise(unsigned long num_resources, std::shared_ptr<Facility> resources, int priority);
+    ResourcePromise(unsigned long num_resources, std::shared_ptr<Facility> resources, double time, int priority);
     
     /// Remembers event that should be planned if seizing was succesfull.
     /// @param event event to be planned

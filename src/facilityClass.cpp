@@ -84,7 +84,7 @@ void Facility::insert_promise(std::shared_ptr<ResourcePromise> promise) {
 std::shared_ptr<ResourcePromise> Facility::seize_or_reserve(int priority){
     auto ptr_this = shared_from_this();
     auto promise = std::make_shared<ResourcePromise>(1, ptr_this, priority);
-    long index = get_index_to_queues(0);
+    long index = get_index_to_queues(priority);
     if (!seized) {
         if(index == HIGHER_PRIO){
             promise->satisfied = true;
@@ -127,6 +127,7 @@ void Facility::get_back(unsigned long number){
         auto new_prom = this->get_promise_from_queue();
         this->seized = true;
         simulation_info->add_seized(this->get_id(), true);
+        simulation_info->add_wait_time(this->get_id(), true, current_time - new_prom->time);
         new_prom->resource_handler->receive_resources(1);
         new_prom->satisfy();
     }
@@ -165,7 +166,7 @@ std::shared_ptr<ResourcePromise> Resources::seize_or_reserve(unsigned long sourc
 
 std::shared_ptr<ResourcePromise> Resources::seize_or_reserve(unsigned long source_number, int priority){
     auto ptr_this = shared_from_this();
-    std::shared_ptr<ResourcePromise> promise(new ResourcePromise(source_number, ptr_this));
+    auto promise = std::make_shared<ResourcePromise>(source_number, ptr_this, current_time, priority);
     long index = get_index_to_queues(priority);
     if (this->current_sources >= source_number) {
         if(index == HIGHER_PRIO){
@@ -174,6 +175,7 @@ std::shared_ptr<ResourcePromise> Resources::seize_or_reserve(unsigned long sourc
             simulation_info->add_seized(this->get_id(), false, source_number);
             this->current_sources -= source_number;
             promise->resource_handler->receive_resources(source_number);
+            simulation_info->add_wait_time(this->get_id(), false, 0);
         } else {
             insert_promise(promise);
         }
@@ -193,6 +195,7 @@ void Resources::get_back(unsigned long number){
             unsigned long req_res = new_prom->resource_handler->required_resources();
             this->current_sources -= req_res;
             simulation_info->add_seized(this->get_id(), false, new_prom->resource_handler->required_resources());
+            simulation_info->add_wait_time(this->get_id(), false, current_time - new_prom->time);
             new_prom->resource_handler->receive_resources(req_res);
             this->pop_promise_from_queue();
             new_prom->satisfy();
