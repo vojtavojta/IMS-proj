@@ -39,7 +39,6 @@ class leaving: public RREvent {
 //customer pays
 class payment: public RREvent {
     void behaviour() override {
-        std::cout << "customer payment " << this->get_id() << "\n" ;
         auto l = std::make_shared<leaving>();
         l->resource_handler = this->resource_handler;
         l->plan(current_time + Exp_Random(7)); 
@@ -48,7 +47,6 @@ class payment: public RREvent {
 //customer goes to the cash desk
 class goods_selected: public RREvent {
     void behaviour() override {
-        std::cout << "goods selected" << this->get_id() << "\n";
         auto a = cashDesk->seize_or_reserve();
         auto d = this->resource_handler;
         auto l = [d](){
@@ -64,7 +62,6 @@ class goods_selected: public RREvent {
 //customer is shoping
 class shoping: public RREvent {
     void behaviour() override {
-        std::cout << "customer is shoping" << this->get_id() << "\n" ;
         auto goods = std::make_shared<goods_selected>();
         goods->resource_handler = this->resource_handler;
         goods->plan(current_time + Exp_Random(15));
@@ -94,7 +91,6 @@ class delicatessen_shoping: public RREvent {
 //customer waits in delicatessen
 class delicatessen_queue: public RREvent {
     void behaviour() override {
-        std::cout << "customer in delicatessen queue" << this->get_id() << "\n";
         auto a = delicatessen->seize_or_reserve(1);
         auto d = this->resource_handler;
         auto l = [d](){
@@ -111,7 +107,7 @@ class delicatessen_queue: public RREvent {
 // 30% of customers go to the delicatessen 
 class choosing_customer_type: public RREvent {
     void behaviour() override {
-        if(Norm_Random(0, 100) > 70){
+        if(Uniform_Random(0, 100) > 70){
             auto s = std::make_shared<delicatessen_queue>();
             s->resource_handler = this->resource_handler;
             s->plan();
@@ -126,7 +122,6 @@ class choosing_customer_type: public RREvent {
 //customer take a shoping trolley 
 class take_trolley:public Event{
     void behaviour() override {
-            std::cout << "customer created " << this->get_id() << "\n";
             auto a = shoppingTrolley->seize_or_reserve(1);
             auto w = std::make_shared<choosing_customer_type>();
             auto l = [](){
@@ -184,7 +179,6 @@ class delivery_generator: public Event{
 };
 
 int main(int argc, const char * argv[]) {
-    std::cout << "start\n";
     auto sim = std::make_shared<Simulator>(0, 480);
     auto a = std::make_shared<customer_generator>();
     a->plan();
