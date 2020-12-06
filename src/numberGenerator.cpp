@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <cmath>
+#include <ctime>
 #include "numberGenerator.hpp"
 
 //congruential generator
@@ -98,7 +99,7 @@ void Test_Random(int number_of_iterations) {
 
     }
     std::cout << "\nBasic random test: \n-----------------------\n";
-    std::cout << n_0 << " " << n_1 << " " << n_2 << " " << n_3 ;
+    std::cout << n_0 << " " << n_1 << " " << n_2 << " " << n_3  << " " << clock();
 
 }
 
