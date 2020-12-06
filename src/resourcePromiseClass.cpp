@@ -42,14 +42,15 @@ void ResourcePromise::on_success(std::shared_ptr<RREvent> event){
 }
 
 void ResourcePromise::on_success(std::function<void (std::vector<std::shared_ptr<ResourceHandler>>)> succ_handler){
-    std::shared_ptr<RREvent> succ_event(new LambdaBasedRREvent(succ_handler));
-//    std::shared_ptr<RREvent> succ_event = std::make_shared<LambdaBasedRREvent>(succ_handler);
+//    std::shared_ptr<RREvent> succ_event(new LambdaBasedRREvent(succ_handler));
+    std::shared_ptr<RREvent> succ_event = std::make_shared<LambdaBasedRREvent>(succ_handler);
     on_success(succ_event);
 }
 
 void ResourcePromise::on_fail(double max_wait, std::function<void ()> fail_handler) {
+//    std::shared_ptr<Event> fail_event(new LambdaBasedEvent(fail_handler));
     std::shared_ptr<Event> event = std::make_shared<LambdaBasedEvent>(fail_handler);
-    on_fail(max_wait, fail_event);
+    on_fail(max_wait, event);
 }
 
 void ResourcePromise::on_fail(double wait_until, std::shared_ptr<Event> timed_out_event) {

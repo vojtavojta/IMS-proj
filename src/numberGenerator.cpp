@@ -8,13 +8,32 @@
 //congruential generator
 double Random(void) {
     ix = ix * 69069L + 1; // implicit modulo
-    return ix / ((double)ULONG_MAX + 1);
+    double tmp = ix / ((double)ULONG_MAX + 1);
+    GeneratedNumberStatistics::shared.add_value(RANDOM, tmp);
+    return tmp;
 }
+
+//used in other random functions
+double __Random(void){
+    ix = ix * 69069L + 1; // implicit modulo
+    double tmp = ix / ((double)ULONG_MAX + 1);
+    return tmp;
+}
+
 //generator exponential distribution
 double Exp_Random(double lambda) {
-    double result = -1 * lambda * log(Random());
+    double result = -1 * lambda * log(__Random());
+    GeneratedNumberStatistics::shared.add_value(EXP, result);
     return result;
 }
+
+
+//used in other random functions
+double __Exp_Random(double lambda) {
+    double result = -1 * lambda * log(__Random());
+    return result;
+}
+
 //generator gaussian distribution - using exclusion method
 double Norm_Random(double m, double s) {
     double x, y;
@@ -23,12 +42,18 @@ double Norm_Random(double m, double s) {
         x = X_For_Norm_Distribution(m,s);
         y = Y_For_Norm_Distribution(m, s);
     } while (y > Norm_Distribution_Function(x,m,s));
+    GeneratedNumberStatistics::shared.add_value(NORM, x);
+
     return x;
 }
+
 //generator uniform distribution
 double Uniform_Random(double min, double max) {
-    return (min + (Random() * (max - min)));
+    double tmp = (min + (__Random() * (max - min)));
+    GeneratedNumberStatistics::shared.add_value(UNIFORM, tmp);
+    return tmp;
 }
+
 //function of normal distribution used in Norm_Random
 double Norm_Distribution_Function(double x, double m, double s)
 {
@@ -38,18 +63,20 @@ double Norm_Distribution_Function(double x, double m, double s)
 
     return b / s * exp(-0.5f * a * a);
 }
+
 //auxiliary function for Norm_Random - return random number in correcct range
 double Y_For_Norm_Distribution(double m, double s) {
    double max = Norm_Distribution_Function(m, m, s);
-   return Random() * max;
+   return __Random() * max;
 }
+
 //auxiliary function for Norm_Random - return random number in correcct range
 double X_For_Norm_Distribution(double m, double s) {
     double max = m + (SIGMA_MULTIPLE * s);
     double min = m - (SIGMA_MULTIPLE * s);
-    return (min + (Random() * (max - min)));
-
+    return (min + (__Random() * (max - min)));
 }
+
 //Test for Random
 void Test_Random(int number_of_iterations) {
     int n_0 = 0, n_1 = 0, n_2 = 0, n_3 = 0;
@@ -133,17 +160,4 @@ void Test_Uniform_Random(int number_of_iterations) {
         std::cout << "\n>" << coun[c];
     }
 }
-
-//int main()
-//{
-//    Test_Random(100000);
-//    Test_Exp_Random(100000,10);
-//    Test_Norm_Random(10000);
-//    Test_Uniform_Random(10000);
-//    
-//    
-//    return 0;
-//
-//}
-
 

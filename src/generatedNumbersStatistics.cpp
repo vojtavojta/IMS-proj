@@ -50,6 +50,7 @@ void GeneratedNumberStatistics::add_value(unsigned short type, double value){
 
 void GeneratedNumberStatistics::print_out() {
     *this->file_descriptor << "\nGeneral information about all generated values\n\n";
+//    std::cout << shared.generated_numbers_info[2].generated << "\n";
     for (unsigned long i = 0; i < generated_numbers_info.size(); i++) {
         if (generated_numbers_info[i].generated != 0) {
             *this->file_descriptor << "-----------------------------------------------------\n";
