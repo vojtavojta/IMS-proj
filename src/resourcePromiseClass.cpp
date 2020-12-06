@@ -42,7 +42,7 @@ void ResourcePromise::on_success(std::shared_ptr<RREvent> event){
 }
 
 void ResourcePromise::on_success(std::function<void (std::vector<std::shared_ptr<ResourceHandler>>)> succ_handler){
-    std::shared_ptr<RREvent> succ_event(new LambdaBasedRREvent(succ_handler));
+    std::shared_ptr<RREvent> succ_event = std::make_shared<LambdaBasedRREvent>(succ_handler);
     on_success(succ_event);
 }
 
