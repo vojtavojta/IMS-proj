@@ -14,9 +14,9 @@
 
 #include <iostream>
 
-#include "simSimLib.hpp"
+#include "src/simSimLib.hpp"
 
-#include "numberGenerator.hpp"
+// #include "numberGenerator.hpp"
 
 
 auto cashDesk = std::make_shared<Facility>("Cash_desk");
