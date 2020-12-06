@@ -89,9 +89,11 @@ public:
     /// Checks if facility is seized.
     virtual bool busy();
     
-    virtual ~Facility() {
-        
-    }
+    /// Pops promise from queue.
+    void pop_promise_from_queue();
+    
+    /// Destructor of facility.
+    virtual ~Facility() {}
 };
 
 /// Class of resources (Store).

@@ -111,12 +111,13 @@ bool Facility::is_queues_empty(){
 
 std::shared_ptr<ResourcePromise> Facility::get_promise_from_queue(){
     std::shared_ptr<ResourcePromise> r = this->queues[this->queues.size()-1].promises.front();
-    this->queues[this->queues.size()-1].promises.pop();
-    if (this->queues[this->queues.size()-1].promises.size() == 0 && this->queues.size()) {
-        this->queues.pop_back();
-    }
     return r;
 }
+
+void Facility::pop_promise_from_queue(){
+    this->queues[this->queues.size()-1].promises.pop();
+}
+
 
 void Facility::get_back(unsigned long number){
     assert(number == 1);
@@ -193,14 +194,9 @@ void Resources::get_back(unsigned long number){
             this->current_sources -= req_res;
             simulation_info->add_seized(this->get_id(), false, new_prom->resource_handler->required_resources());
             new_prom->resource_handler->receive_resources(req_res);
+            this->pop_promise_from_queue();
             new_prom->satisfy();
-        } else {
-            insert_promise(new_prom);
         }
-        this->seized = true;
-        simulation_info->add_seized(this->get_id(), true);
-        new_prom->resource_handler->receive_resources(1);
-        new_prom->satisfy();
     }
 }
 
