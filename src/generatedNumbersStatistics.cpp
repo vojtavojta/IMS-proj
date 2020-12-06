@@ -79,5 +79,5 @@ void GeneratedNumberStatistics::print_out() {
 
         }
     }
-    *this->file_descriptor << "=====================================================\n";
+    *this->file_descriptor << "-----------------------------------------------------\n";
 }
